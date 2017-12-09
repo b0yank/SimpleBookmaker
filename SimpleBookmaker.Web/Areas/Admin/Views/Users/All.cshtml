@@ -1,0 +1,33 @@
+﻿@model UserListPageModel
+
+@{
+    ViewData["Title"] = "All";
+}
+
+<h2>All Users</h2>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+                <td>@(string.Join(", ", user.Roles))</td>
+                <td><a asp-action="ManageRoles" asp-route-id="@user.Id" class="btn btn-primary">Edit Roles</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{ 
+    await Html.RenderPartialAsync("_PageNavigation", Model);
+}

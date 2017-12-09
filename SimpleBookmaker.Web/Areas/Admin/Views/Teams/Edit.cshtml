@@ -1,0 +1,69 @@
+﻿@model TeamEditModel
+
+@{
+    ViewData["Title"] = $"Edit {Model.Name}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<a asp-controller="Players" asp-action="All" asp-route-teamId="@Model.Id" class="btn btn-primary">Go to players</a>
+
+<div class="container">
+    <div class="col-sm-4">
+        <h4>Competing In:</h4>
+
+        <table class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th style="text-align:center">Tournament</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tournament in Model.CompetingTournaments)
+                {
+                    <tr>
+                        <td style="text-align:center">@tournament.Name</td>
+                        <td>
+                            <form method="post" asp-action="RemoveTournament">
+                                <input type="hidden" name="TournamentId" value="@tournament.Id" />
+                                <input type="hidden" name="TeamId" value="@Model.Id" />
+
+                                <input type="submit" value="Remove" class="btn btn-sm btn-danger" style="float: right">
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-4">
+        @if (Model.NotCompetingTournaments.Count() > 0)
+        {
+            <h4>Add to competition:</h4>
+            <form method="post" asp-action="AddTournament">
+                <div class="form-group">
+                    <select name="TournamentId" class="form-control">
+                        @foreach (var tournament in Model.NotCompetingTournaments)
+                        {
+                            <option value="@tournament.Id">@tournament.Name</option>
+                        }
+                    </select>
+
+                    <input type="hidden" name="TeamId" value="@Model.Id" />
+                </div>
+
+                <input type="submit" value="Add" class="btn btn-success" />
+            </form>
+        }
+        else
+        {
+            <h4>This team is already competing in all available competitions.</h4>
+        }
+
+        <div style="padding-top: 1em;">
+            <a asp-action="All" class="btn btn-default">Back to list</a>
+        </div>
+    </div>
+</div>
+

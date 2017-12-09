@@ -1,0 +1,19 @@
+﻿@model PageModel
+
+<div class="btn-group btn-group-sm" style="border-radius: 0">
+    @{
+        if (Model.TotalPages > 1)
+        {
+            var firstPage = Model.CurrentPage > 6 ? Model.CurrentPage - 5 : 1;
+            var lastPage = Model.TotalPages > Model.CurrentPage + 5 ? Model.CurrentPage + 5 : Model.TotalPages;
+
+            for (int pageNo = firstPage; pageNo <= lastPage; pageNo++)
+            {
+                var btnClass = Model.CurrentPage == pageNo ? "btn-info" : "btn-default";
+                var disabled = Model.CurrentPage == pageNo ? "disabled" : string.Empty;
+
+                <a href="/@Context.Request.Path/@pageNo" class="btn @btnClass" @disabled>@pageNo</a>
+            }
+        }
+    }
+</div>

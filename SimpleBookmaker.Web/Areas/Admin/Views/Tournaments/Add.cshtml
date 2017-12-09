@@ -1,0 +1,38 @@
+﻿@model TournamentAddModel
+@{
+    ViewData["Title"] = "Add Tournament";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Add" method="post" class="form-horizontal">
+    <div class="form-group">
+        <div class="col-sm-8">
+            <label asp-for="@Model.Name" class="control-label col-sm-2"></label>
+            <div class="col-sm-6">
+                <input asp-for="@Model.Name" class="form-control" />
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-8">
+            <label asp-for="@Model.StartDate" class="control-label col-sm-2"></label>
+            <div class="col-sm-6">
+                <input asp-for="@Model.StartDate" class="form-control" />
+                <span asp-validation-for="@Model.StartDate" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-8">
+            <label asp-for="@Model.EndDate" class="control-label col-sm-2"></label>
+            <div class="col-sm-6">
+                <input asp-for="@Model.EndDate" class="form-control" />
+                <span asp-validation-for="@Model.EndDate" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <span class="col-sm-offset-2"></span>
+    <input type="submit" value="Add Tournament" class="btn btn-primary" style="text-align: center"/>
+</form>

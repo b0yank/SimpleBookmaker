@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="BetResolvers\GameBetResolvers\CleanSheetGameBetResolver.cs" />
+    <Compile Remove="BetResolvers\GameBetResolvers\MorePossessionGameBetResolver.cs" />
+    <Compile Remove="Models\Tournament\TournamentEditModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleBookmaker.Data\SimpleBookmaker.Data.csproj" />
+  </ItemGroup>
+
+</Project>

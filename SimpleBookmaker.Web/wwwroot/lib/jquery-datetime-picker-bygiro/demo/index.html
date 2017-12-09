@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>jQuery DatetimePicker ByGiro demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	
+	<!-- Twitter bootstrap -->
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap-theme.min.css">	
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">	-->
+
+    <link href="../dist/jquery.datetimepicker.ByGiro.css" rel="stylesheet">
+    <script src="../dist/jquery.datetimepicker.ByGiro.js"></script>
+
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="row-fluid">
+			<h1>jQuery plugin: DatetimePicker ByGiro</h1>
+			<p>It needs jQuery, full bootstrap library</p>
+
+			<form autocomplete="off" class="form-horizontal">
+			<div class="row-fluid">
+			  <div class="span6">
+				<div class="row-fluid">
+					<label class="control-label" for="inputAddress">Datetime</label>
+					<div class="controls">
+					  <input type="text" class="inputDatetime input-xxlarge" value="" autocomplete="off" placeholder="Select a date">
+					</div>
+				</div>			  
+			  </div>
+			  <div class="span6">
+
+			  </div>
+			</div>
+			</form>
+          </div><!--/span-->
+        <script>
+            $('.inputDatetime').datetimepickerByGiro({
+				style			: 'popup', // / inline / popup
+				autoclose		: true, // autoclose the popup on date / date range selected
+				uiTarget		: false, // the UI target to contain the datetime value
+				firstDay		: 1, // 0 - 6:  sunday -> saturday   // default 1 (Monday)
+				minView			: 'times', // times / days / months / years
+				maxView			: 'years', // times / days / months / years
+				startView		: 'days', // times / days / months / years
+				min				: null, // starting date to allow selection
+				max				: null, // ending date to allow selection
+				today			: 'now', // if string is provided it will follow the option "format" provided (except for the string "now") / new Date() object
+				showDaysNotInMonth	: false,
+				showDisabledTimes	: false,
+				calendars		: 3,
+				format			: 'Y-m-d H:i:s', // PHP standard format
+				uiFormat		: 'Y-m-d H:i', // PHP standard format. if provided different from the option "format", the original input will be hidden, and the date selected will be shown in this format
+				separator		: ' | ', // this will be the separator for multiple dates or date range
+				mode			: 'range', // single / multiple / range
+				timeFormat		: 24, // 12 / 24
+				minuteStep		: 15,
+			/*	specialDates	:[ // it could be a simple array of numbers/strings 0 - 6: sunday -> saturday OR a more complex array of objects with more parameters
+					0, // 0 - 6: sunday -> saturday
+					'Wednesday', //you can also use the day name BUT it must be the same word (case sensitive) as specified in the language text options
+					{ // you can use an object with more details
+						selectable: true, // true or false, to enable or disable the user selection on this date, if null it's selectable
+						date: new Date(2013, 11, 25), // string OR day name OR weekday number (0 - 6) OR Date() object
+						repeatYear: true,
+						repeatMonth: true,
+						repeatWeek: true, // if repeatWeek is selected, repeatMonth and repeatYear are automatically enabled
+						selectableTimes: [ // if null, the full day is ENABLED or DISABLED based on the "selectable" value
+							// if it's not empty, the time external to the timeslots will be considere the opposite of the "selectable" value
+							'10:30 - 18:45', // time ranges must be separated by "-"
+							'8:10am - 8:20pm', // you can use 12 hours format using AM / PM
+							'12:30 - 11:20pm' // if AM / PM is not found, the 24 hours format will be used, so in this case the first time (12:30) is in 24 hours format and the second (11:20pm) in 12 hours format.
+						],
+						attributes:{
+							class:'special'
+						},
+						message:'My Birthday!!!!'
+					}
+				],	
+			*/
+				specialDates: [] // see above
+		});
+        </script>
+        </div><!--/span-->
+      </div><!--/row-->
+    </div><!--/.fluid-container-->
+
+</body>
+</html>

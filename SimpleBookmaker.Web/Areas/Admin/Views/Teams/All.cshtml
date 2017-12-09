@@ -1,0 +1,39 @@
+﻿@model TeamListPageModel
+
+@{
+    ViewData["Title"] = "Teams";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="All" method="post" class="form-inline">
+        <input type="text" name="keyword" class="form-control" placeholder="Search teams" />
+
+        <input type="submit" value="Search" class="btn btn-primary" />
+</form>
+<br />
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Tournaments</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var team in Model.Teams)
+        {
+            <tr>
+                <td><a asp-controller="Players" asp-action="All" asp-route-teamId="@team.Id">@team.Name</a></td>
+                <td>@(string.Join(", ", team.Tournaments))</td>
+                <td><a asp-action="Edit" asp-route-id="@team.Id" class="btn btn-warning">Edit</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Add" class="btn btn-success">Add Team</a>
+
+@{ 
+    await Html.RenderPartialAsync("_PageNavigation", Model);
+}

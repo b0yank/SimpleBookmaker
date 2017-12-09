@@ -1,0 +1,52 @@
+﻿@model BookieGameListPageModel
+
+@{ 
+    ViewData["Title"] = "Upcoming Games";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <form asp-action="All" method="get" class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label">Choose tournament: </label>
+                    <select name="TournamentId" class="form-control">
+                        @foreach (var tournament in Model.Tournaments)
+                        {
+                            <option value="@tournament.Id">@tournament.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Filter" class="btn btn-warning" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<h4>Games</h4>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Kick off</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model.Games)
+        {
+            <tr>
+                <td>@game.HomeTeam</td>
+                <td>@game.AwayTeam</td>
+                <td>@($"{game.Kickoff.ToShortDateString()} - {game.Kickoff.ToShortTimeString()}")</td>
+                <td><a asp-action="SetBets" asp-route-gameId="@game.Id" class="btn btn-primary">Set Bets</a></td>
+            </tr>
+        }
+    </tbody>
+</table> 

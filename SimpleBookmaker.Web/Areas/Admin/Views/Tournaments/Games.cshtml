@@ -1,0 +1,38 @@
+﻿@model TournamentGamesListPageModel
+
+@{
+    ViewData["Title"] = $"Games in {Model.Tournament}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="form-group">
+    <a asp-controller="Games" asp-action="Add" asp-route-tournamentId="@Model.TournamentId" class="btn btn-primary">Add New Game</a>
+</div>
+
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Kick Off: </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model.Games)
+        {
+            <tr>
+                <td>@game.HomeTeam</td>
+                <td>@game.AwayTeam</td>
+                <td>@game.Kickoff</td>
+                <td>
+                    <a asp-controller="Games" asp-action="Edit" asp-route-id="@game.Id" class="btn btn-warning">Edit</a>
+                    <a asp-controller="Games" asp-action="Remove" asp-route-id="@game.Id"class="btn btn-danger">Remove</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

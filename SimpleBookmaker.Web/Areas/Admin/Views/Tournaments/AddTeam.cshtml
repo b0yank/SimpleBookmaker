@@ -1,0 +1,35 @@
+﻿@model TournamentAddTeamViewModel
+
+@{
+    ViewData["Title"] = $"Add Team to {Model.TournamentName}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model.AvailableTeams.Count() > 0)
+{
+    <h4>Choose team:</h4>
+
+    <form asp-action="AddTeam" method="post">
+        <div class="form-group">
+            <select name="Teams" multiple>
+                @foreach (var team in Model.AvailableTeams)
+                {
+                    <option value="@team.Id">@team.Name</option>
+                }
+            </select>
+        </div>
+
+        <input type="hidden" name="TournamentId" value="@Model.TournamentId" />
+
+        <p>Hold down the Ctrl (windows) / Command (Mac) button to select multiple teams.</p>
+
+        <input type="submit" value="Add Teams" class="btn btn-success" />
+        <a asp-action="All" class="btn btn-default">Back to list</a>
+    </form>
+}
+else
+{
+    <h4>Sorry, all teams have already been assigned to this tournament.</h4>
+}
+

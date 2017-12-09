@@ -1,0 +1,48 @@
+﻿@model UserManageRoleModel
+@{
+    ViewData["Title"] = "Manage Roles";
+}
+<h2>@ViewData["Title"]</h2>
+<h4>Roles of @Model.Email</h4>
+<ul class="list-group">
+    @foreach (var role in Model.Roles)
+    {
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-sm-2">
+                    @role
+                </div>
+                <div class="col-sm-1">
+                    <form asp-action="removerole" method="post">
+                        <input type="hidden" name="Role" value="@role" />
+                        <input type="hidden" name="Id" value="@Model.Id" />
+
+                        <input type="submit" value="Remove" class="btn btn-danger" />
+                    </form>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+<form asp-action="AddRole" method="post">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="control-label">Roles: </label>
+                    <select name="Role" class="form-control">
+                        @foreach (var role in Model.RolesNotAssigned)
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    </select>
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                </div>
+                <input type="submit" value="Add Role" class="btn btn-info" />
+                <a asp-action="All" class="btn btn-default">Back to list</a>
+            </div>
+        </div>
+    </div>
+</form>
+<br />
+

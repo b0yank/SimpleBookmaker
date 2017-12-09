@@ -1,0 +1,16 @@
+﻿@model IEnumerable<TournamentListModel>
+
+@{
+    ViewData["Title"] = "All tournaments";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<ul class="list-group">
+    @foreach (var tournament in Model)
+    {
+        <li class="list-group-item">
+            <a asp-action="SetBets" asp-route-tournamentId="@tournament.Id">@tournament.Name</a>
+        </li>
+    }
+</ul>

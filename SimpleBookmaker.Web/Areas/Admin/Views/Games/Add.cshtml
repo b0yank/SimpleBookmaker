@@ -1,0 +1,77 @@
+﻿@model GameAddModel
+@inject ITeamsService teams
+@inject ITournamentsService tournaments
+
+@{
+    var teamsInTournament = teams.ByTournament(Model.TournamentId);
+    var tournament = tournaments.GetName(Model.TournamentId);
+
+    ViewData["Title"] = $"Add Game to {tournament}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<div class="container">
+    <form method="post" asp-controller="Games" asp-action="Add">
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label class="control-label">Home Team: </label>
+                <select name="HomeTeamId" class="form-control">
+                    @foreach (var team in teamsInTournament)
+                    {
+                        <option value="@team.Id">@team.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-sm-6">
+                <label class="control-label">Away Team: </label>
+                <select name="AwayTeamId" class="form-control">
+                    @foreach (var team in teamsInTournament)
+                    {
+                        <option value="@team.Id">@team.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-3">
+                <label class="control-label">Kickoff date:</label>
+                <input id="Date" name="Date" type="date" data-val="true" data-val-required="The date field is required." class="form-control" />
+            </div>
+            <div class="form-group col-sm-2">
+                <label class="control-label">Kickoff time:</label>
+                <input type="text" name="Time" class="form-control timepicker" />
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <input type="hidden" name="TournamentId" value="@Model.TournamentId" />
+                <input type="submit" value="Create Game" class="btn btn-success" />
+
+                <a asp-controller="Tournaments" asp-action="Games" asp-route-tournamentId="@Model.TournamentId" class="btn btn-primary">@tournament games</a>
+                <a asp-controller="Tournaments" asp-action="All" class="btn btn-default">All Tournaments</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('input.timepicker').timepicker({
+                timeFormat: 'HH:mm',
+                interval: 5,
+                minTime: '0:00',
+                maxTime: '23:59',
+                defaultTime: '15',
+                startTime: '13:00',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true
+            });
+        });
+    </script>
+}

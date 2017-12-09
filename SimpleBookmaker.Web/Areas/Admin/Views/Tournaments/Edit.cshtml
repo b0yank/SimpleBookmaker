@@ -1,0 +1,51 @@
+﻿@model TournamentModel
+
+@{
+    ViewData["Title"] = "Edit Tournament";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Edit" method="post">
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="@Model.Name" class="control-label col-sm-2"></label>
+            <div class="col-sm-4">
+                <input asp-for="@Model.Name" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="@Model.StartDate" class="control-label col-sm-2"></label>
+            <div class="col-sm-4">
+                <input asp-for="@Model.StartDate" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="@Model.EndDate" class="control-label col-sm-2"></label>
+            <div class="col-sm-4">
+                <input asp-for="@Model.EndDate" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <input type="submit" value="Edit Tournament" class="btn btn-warning" />
+                <a asp-action="All" class="btn btn-default">Back to list</a>
+            </div>
+        </div>
+    </div>
+</form>
+

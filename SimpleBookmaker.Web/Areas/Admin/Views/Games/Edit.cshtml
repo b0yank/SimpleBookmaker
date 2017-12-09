@@ -1,0 +1,60 @@
+﻿@model GameDetailedModel
+
+@{
+    ViewData["Title"] = "Edit Game";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container">
+    <form asp-action="Edit" method="post">
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label asp-for="@Model.HomeTeam" class="control-label"></label>
+                <input asp-for="@Model.HomeTeam" class="form-control" disabled />
+            </div>
+            <div class="form-group col-sm-6">
+                <label asp-for="@Model.AwayTeam" class="control-label"></label>
+                <input asp-for="@Model.AwayTeam" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-3">
+                <label class="control-label">Kickoff date:</label>
+                <input id="Date" name="Date" type="date" data-val="true" data-val-required="The date field is required." class="form-control" />
+            </div>
+            <div class="form-group col-sm-2">
+                <label class="control-label">Kickoff time:</label>
+                <input type="text" name="Time" class="form-control timepicker" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <input type="hidden" name="TournamentId" value="@Model.TournamentId" />
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <input type="submit" value="Edit Game" class="btn btn-warning" />
+
+                <a asp-controller="Tournaments" asp-action="Games" asp-route-id="@Model.TournamentId" class="btn btn-default">Back to tournament</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('input.timepicker').timepicker({
+                timeFormat: 'HH:mm',
+                interval: 5,
+                minTime: '0:00',
+                maxTime: '23:59',
+                defaultTime: '15',
+                startTime: '13:00',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true
+            });
+        });
+    </script>
+}

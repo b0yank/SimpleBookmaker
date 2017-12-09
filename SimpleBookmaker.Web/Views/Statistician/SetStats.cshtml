@@ -1,0 +1,223 @@
+﻿@model GameStatsModel
+
+@{
+    ViewData["Title"] = "Set Game Stats";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p class="lead">
+    <span class="text-info">@Model.Tournament</span> game between <span class="text-info">@Model.HomeTeam</span> and <span class="text-info">@Model.AwayTeam</span> - played on @Model.Kickoff.ToShortDateString()
+</p>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="SetStats" method="post">
+
+    <table class="table column-centered">
+        <colgroup>
+            <col span="1" style="width: 10%" />
+            <col span="1" style="width: 15%" />
+            <col span="1" style="width: 15%" />
+            <col span="1" style="width: 60%" />
+        </colgroup>
+
+        <thead>
+            <tr>
+                <th class="lead">Stat</th>
+                <th class="lead">Home</th>
+                <th class="lead">Away</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    <label class="control-label">Result</label>
+                </td>
+                <td>
+                    <input type="text" disabled id="homeGoals" value="0" class="form-control" />
+                </td>
+                <td>
+                    <input type="text" disabled id="awayGoals" value="0" class="form-control" />
+                </td>
+                <td>
+                    <div class="col-sm-3 col-md-1">
+                        <div class="form-group">
+                            <input type="submit" value="Submit stats" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="control-label">Corners</label>
+                </td>
+                <td>
+                    <input type="number" min="0" step="1" name="HomeCorners" class="form-control" />
+                </td>
+                <td>
+                    <input type="number" min="0" step="1" name="AwayCorners" class="form-control" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="control-label">Free Kicks</label>
+                </td>
+                <td>
+                    <input type="number" min="0" step="1" name="HomeFreeKicks" class="form-control" />
+                </td>
+                <td>
+                    <input type="number" min="0" step="1" name="AwayFreeKicks" class="form-control" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="control-label">Possession</label>
+                </td>
+                <td>
+                    <input type="number" min="0" step="1" name="HomePossession" class="form-control" />
+                </td>
+                <td>
+                    <input type="number" min="0" step="1" name="AwayPossession" class="form-control" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="control-label">Goalscorers</label>
+                </td>
+                <td><ul class="list-group" id="homeScorersList"></ul></td>
+
+                <td><ul class="list-group" id="awayScorersList"></ul></td>
+            </tr>
+        </tbody>
+    </table>  
+    
+    <input type="hidden" id="homeScorers" name="HomeGoalscorers" />
+    <input type="hidden" id="awayScorers" name="AwayGoalscorers" />
+
+    <div class="container">
+        <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+                <select id="homePlayersDropdown" class="form-control">
+                    <option value="0">Own goal</option>
+                    @foreach (var player in Model.HomePlayers)
+                    {
+                        <option value="@player.Id">@player.Name</option>
+                    }
+                </select>
+            </div>
+
+            <button class="btn btn-success" type="button" onclick="addHomeScorer()">Add Home Goalscorer</button>
+        </div>
+
+        <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+                <select id="awayPlayersDropdown" class="form-control">
+                    <option value="0">Own goal</option>
+                    @foreach (var player in Model.AwayPlayers)
+                    {
+                        <option value="@player.Id">@player.Name</option>
+                    }
+                </select>
+            </div>
+
+            <button class="btn btn-success" type="button" onclick="addAwayScorer()">Add Away Goalscorer</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    function addHomeScorer() {
+        if (typeof addHomeScorer.homeScorers == 'undefined') {
+
+                addHomeScorer.homeScorers = '';
+            }
+
+            var addedPlayer = $("#homePlayersDropdown option:selected").text();
+            var addedPlayerId = $("#homePlayersDropdown option:selected").val();
+
+            document.getElementById("homeScorers").value += (' ' + addedPlayerId);
+            
+            var scorersList = document.getElementById("homeScorersList");
+
+            scorersList.innerHTML += '<li class="list-group-item">' + addedPlayer + '</li>';
+
+            document.getElementById("homeGoals").value++;
+        }
+
+        function addAwayScorer() {
+            if (typeof addAwayScorer.awayScorers == 'undefined') {
+
+                addAwayScorer.awayScorers = '';
+            }
+
+            var addedPlayer = $("#awayPlayersDropdown option:selected").text();
+            var addedPlayerId = $("#awayPlayersDropdown option:selected").val();
+
+            document.getElementById("awayScorers").value += (' ' + addedPlayerId);
+
+            var scorersList = document.getElementById("awayScorersList");
+
+            scorersList.innerHTML += '<li class="list-group-item">' + addedPlayer + '</li>';;
+
+            document.getElementById("awayGoals").value++;
+        }
+</script>
+
+
+
+    @*
+            <div class="form-group">
+                    <label for="Parts" class="control-label">Parts</label>
+                    <select id="homePlayersDropdown" name="PartsDropdown" >
+                        @foreach (var part in Model)
+                        {
+                            <option value="@part.Id">@part.Name</option>
+                        }
+                    </select>
+                    <input type="hidden" id="parts" name="Parts" />
+                </div>
+                <button class="btn btn-danger" type="button" onclick="addPart()">Add Goalscorer</button>
+
+            </form>
+
+        </div>
+
+        <div class="col-md-4">
+            <h4>Parts Added:</h4>
+            <table class="table-condensed">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody id="addedParts"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function addPart() {
+            //if (typeof addPart.partsList == 'undefined') {
+
+            //    addPart.partsList = '';
+            //}
+
+            var addedPart = $("#partsDropdown option:selected").text();
+            var addedPartId = $("#partsDropdown option:selected").val();
+
+            document.getElementById("parts").value += (' ' + addedPartId);
+
+            document.getElementById("addedParts").innerHTML += '<tr><td>' + addedPart + '</td></tr>'
+        }
+
+        $('#form1').submit(function () {
+             addPart.partsList;
+            $(this).children('#partsDropdown').remove()
+
+            return true; // return false to cancel form action
+        });
+    </script>
+    *@

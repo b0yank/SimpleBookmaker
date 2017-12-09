@@ -1,0 +1,28 @@
+﻿@model TeamPlayersListModel
+
+@{
+    ViewData["Title"] = $"Add Player to {Model.Team}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="form-group">
+    <a asp-action="Create" asp-route-teamId="@Model.TeamId" class="btn btn-success">Create new player</a>
+</div>
+
+<form asp-action="AddToTeam" method="post">
+    <div class="form-group">
+        <label class="control-label">Choose player:</label>
+
+        <select name="PlayerId" class="form-control" style="width: 300px">
+            @foreach (var player in Model.Players)
+            {
+                <option value="@player.Id">@player.Name</option>
+            }
+        </select>
+    </div>
+
+    <input type="hidden" name="TeamId" value="@Model.TeamId" />
+
+    <input type="submit" value="Assign Team" class="btn btn-primary" />
+</form>

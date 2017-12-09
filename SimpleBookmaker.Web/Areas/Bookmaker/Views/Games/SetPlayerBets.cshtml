@@ -1,0 +1,68 @@
+﻿@model SetPlayerBetsViewModel
+
+@{
+    ViewData["Title"] = "Set Player Bets";
+}
+
+<h2>Set player bets for @Model.HomeTeam vs @Model.AwayTeam</h2>
+
+@{
+    await Html.RenderPartialAsync("_ExistingCoefficientsPartial",
+        new ExistingCoefficientViewModel
+        {
+            ExistingCoefficients = Model.ExistingCoefficients,
+            RemoveAction = "RemovePlayerCoefficient",
+            EditAction = "EditPlayerCoefficient"
+        });
+}
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<h4 class="form-group">Choose bet to add:</h4>
+
+<ul class="list-group">
+    @foreach (var possibleCoefficient in Model.PossibleCoefficients)
+    {
+        <li class="list-group-item">
+            <div class="row">
+                <form asp-action="SetPlayerBets" method="post">
+                    <div class="col-sm-4" style="text-align: right;">
+                        @possibleCoefficient.BetCondition
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="control-label col-sm-3" style="text-align: right">Player:</label>
+                        <div class="col-sm-9">
+                            <select name="PlayerId" class="form-control">
+                                @foreach (var player in Model.HomePlayers)
+                                {
+                                    <option value="@player.Id" class="bg-info">@player.Name</option>
+                                }
+                                @foreach (var player in Model.AwayPlayers)
+                                {
+                                    <option value="@player.Id" class="bg-success">@player.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="col-sm-3">
+                            <label class="control-label">Coefficient:</label>
+                        </div>
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-7">
+                            <input type="number" min="0.01" step="0.01" name="Coefficient" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="hidden" name="BetType" value="@possibleCoefficient.BetType" />
+                        <input type="hidden" name="GameId" value="@Model.GameId" />
+
+                        <input type="submit" value="Add Coefficient" class="btn btn-success" />
+                    </div>
+                </form>
+            </div>
+        </li>
+    }
+</ul>
+
+<a asp-action="SetBets" asp-route-gameId="@Model.GameId" class="btn btn-default">Back to game</a>

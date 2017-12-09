@@ -1,0 +1,44 @@
+﻿@model IEnumerable<TournamentDetailedListModel>
+
+@{
+    ViewData["Title"] = "All Tournaments";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="form-group">
+    <a asp-action="Add" class="btn btn-success">Add New</a>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Teams</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tournament in Model)
+        {
+            <tr>
+                <td>@tournament.Name</td>
+                <td>@Html.DisplayFor(item => tournament.StartDate)</td>
+                <td>@Html.DisplayFor(item => tournament.EndDate)</td>
+                <td>@tournament.Teams</td>
+                <td>
+                    <a asp-action="Edit" asp-route-tournamentId="@tournament.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Remove" asp-route-tournamentId="@tournament.Id" class="btn btn-danger">Remove</a>
+                </td>
+                <td>
+                    <a asp-action="AddTeam" asp-route-tournamentId="@tournament.Id" class="btn btn-success">Add Teams</a>
+                    <a asp-controller="Games" asp-action="Add" asp-route-tournamentId="@tournament.Id" class="btn btn-primary">Add Games</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

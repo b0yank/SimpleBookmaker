@@ -1,0 +1,92 @@
+﻿@model SetBetsViewModel
+
+@{
+    ViewData["Title"] = "Set Bets";
+}
+
+<h2>Set Bets for @Model.HomeTeam vs @Model.AwayTeam</h2>
+
+<a asp-action="SetPlayerBets" asp-route-gameId="@Model.GameId" class="btn btn-primary">Go to player coefficients</a>
+
+@{
+    await Html.RenderPartialAsync("_ExistingCoefficientsPartial",
+        new ExistingCoefficientViewModel
+        {
+            ExistingCoefficients = Model.ExistingCoefficients,
+            RemoveAction = "RemoveCoefficient",
+            EditAction = "EditCoefficient"
+        });
+}
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<h4 class="form-group">Choose bet to add:</h4>
+
+<ul class="list-group">
+    @foreach (var possibleCoefficient in Model.PossibleCoefficients)
+    {
+        <li class="list-group-item">
+            <div class="row">
+                <form asp-action="SetBets" method="post">
+                    <div class="col-sm-4" style="text-align: right;">
+                        @possibleCoefficient.BetCondition
+                    </div>
+                    <div class="col-sm-3">
+                        @if (possibleCoefficient.BetType != GameBetType.BothTeamsScore
+                            && possibleCoefficient.BetType != GameBetType.Result)
+                        {
+                            <span class="col-sm-4">
+                                @if (possibleCoefficient.BetSides.Contains(BetSide.Home))
+                                {
+                                    <label class="control-label">1</label>
+                                    <input type="radio" name="Side" value="1" />
+                                }
+                            </span>
+                            <span class="col-sm-4">
+                                @if (possibleCoefficient.BetSides.Contains(BetSide.Neutral))
+                                {
+                                    <label class="control-label">X</label>
+                                    <input type="radio" name="Side" value="0" />
+                                }
+                            </span>
+                            <span class="col-sm-4">
+                                @if (possibleCoefficient.BetSides.Contains(BetSide.Away))
+                                {
+                                    <label class="control-label">2</label>
+                                    <input type="radio" name="Side" value="2" />
+                                }
+                            </span>
+                        }
+                        else if (possibleCoefficient.BetType == GameBetType.Result)
+                        {
+
+                            <div class="col-sm-5">
+                                <input type="number" name="HomeGoals" min="0" step="1" class="form-control"/>
+                            </div>
+                            <div class="col-sm-2 lead">:</div>
+                            <div class="col-sm-5">
+                                <input type="number" name="AwayGoals" min="0" step="1" class="form-control" />
+                            </div>
+                        }
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="col-sm-3">
+                            <label class="control-label">Coefficient:</label>
+                        </div>
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-7">
+                            <input type="number" min="0.01" step="0.01" name="Coefficient" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="hidden" name="BetType" value="@possibleCoefficient.BetType" />
+                        <input type="hidden" name="GameId" value="@Model.GameId" />
+
+                        <input type="submit" value="Add Coefficient" class="btn btn-success" />
+                    </div>
+                </form>
+            </div>
+        </li>
+    }
+</ul>
+

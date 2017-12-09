@@ -1,0 +1,25 @@
+﻿@model IEnumerable<TournamentListModel>
+
+@{
+    ViewData["Title"] = "Choose Tournament";
+}
+
+<h2>Choose tournament you wish to add a game to</h2>
+
+<form asp-action="Add" method="get">
+    <div class="row">
+        <div class="form-group col-sm-4">
+            <select name="tournamentId" class="form-control">
+                @foreach (var tournament in Model)
+            {
+                    <option value="@tournament.Id">@tournament.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-success" value="Select" />
+        <a asp-action="All" class="btn btn-default">Back to list</a>
+    </div>
+</form>

@@ -1,0 +1,33 @@
+{
+  "name": "jquery-datetime-picker-bygiro",
+  "version": "v0.0.4",
+  "authors": [
+    "ByGiro <girotomaselli@gmail.com>"
+  ],
+  "contributors": [],
+  "main": [
+	"dist/jquery.datetimepicker.ByGiro.js"
+  ],
+  "description": "Fully featured datetimepicker",
+  "keywords": [
+    "form",
+    "ByGiro",
+    "datetime picker"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">=1.8.x",
+    "bootstrap": ">=2.3.x"
+  },
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "mocha": "~1.21.4"
+  }
+}

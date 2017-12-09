@@ -1,0 +1,64 @@
+﻿@model PastEventsViewModel
+
+@{
+    ViewData["Title"] = "Statisticians - Index";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model.PastTournaments.Count() > 0)
+{
+    <h4>Past Tournaments</h4>
+
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>Tournament</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tournament in Model.PastTournaments)
+            {
+                <tr>
+                    <td>@tournament.Name</td>
+                    <td>@tournament.StartDate.ToShortDateString()</td>
+                    <td>@tournament.EndDate.ToShortDateString()</td>
+                    <td>
+                        <a asp-action="SetTournament" asp-route-tournamentId="@tournament.Id" class="btn btn-primary">Set Stats</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h4>Past Games</h4>
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Kick off</th>
+            <th>Tournament</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model.PastGames)
+        {
+                <tr>
+                    <td>@game.HomeTeam</td>
+                    <td>@game.AwayTeam</td>
+                    <td>@game.Kickoff</td>
+                    <td>@game.Tournament</td>
+                    <td>
+                        <a asp-action="SetStats" asp-route-gameId="@game.Id" class="btn btn-primary">Set Stats</a>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>

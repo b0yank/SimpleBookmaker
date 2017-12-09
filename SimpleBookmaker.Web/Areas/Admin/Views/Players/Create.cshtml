@@ -1,0 +1,31 @@
+﻿@model PlayerAddModel
+
+@{
+    var team = TempData["Team"].ToString();
+    var teamId = int.Parse(TempData["TeamId"].ToString());
+
+    ViewData["Title"] = $"Create Player in {team}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="@Model.Name" class="control-label"></label>
+        <input asp-for="@Model.Name" class="form-control" />
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Age" class="control-label"></label>
+        <input asp-for="@Model.Age" class="form-control" />
+        <span asp-validation-for="@Model.Age" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" name="TeamId" value="@teamId" />
+
+    <input type="submit" value="Create Player" class="btn btn-success"/>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>aspnet-SimpleBookmaker.Web-825C7C90-F97F-4716-A9EE-8EF25F0F05A7</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Remove="Areas\Admin\Models\Team\TeamListModel.cs" />
+    <Compile Remove="Areas\Admin\Models\Tournament\TournamentAddEditModel.cs" />
+    <Compile Remove="Areas\Admin\Models\Tournament\TournamentDetailedListModel.cs" />
+    <Compile Remove="Areas\Admin\Models\Tournament\TournamentEditModel.cs" />
+    <Compile Remove="Areas\Bookmaker\Controllers\GameController.cs" />
+    <Compile Remove="Areas\Bookmaker\Models\CoefficientModel.cs" />
+    <Compile Remove="Areas\Bookmaker\Models\CoefficientsModel.cs" />
+    <Compile Remove="Areas\Bookmaker\Models\Game\GameCoefficientListModel.cs" />
+    <Compile Remove="Areas\Bookmaker\Models\Game\RemovePlayerCoefficientModel.cs" />
+    <Compile Remove="Infrastructure\Filters\RestoreModelStateFromTempDataAttribute.cs" />
+    <Compile Remove="Infrastructure\Filters\SetTempDataModelStateAttribute.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\Admin\Views\Shared\_DatePickerPartial.cshtml" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" PrivateAssets="All" />
+    <PackageReference Include="Moment.js" Version="2.19.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleBookmaker.Data\SimpleBookmaker.Data.csproj" />
+    <ProjectReference Include="..\SimpleBookmaker.Services\SimpleBookmaker.Services.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,38 @@
+﻿@model TeamPlayersListModel
+
+@{
+    ViewData["Title"] = $"All Players from {Model.Team}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<a asp-action="AddToTeam" asp-route-teamId="@Model.TeamId" class="btn btn-primary">Add Players to @Model.Team</a>
+<a asp-controller="Teams" asp-action="All" class="btn btn-default">Back to teams</a>
+
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    Name
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var player in Model.Players) {
+        <tr>
+            <td>
+               @player.Name
+            </td>
+            <td>
+                <form asp-action="RemoveFromTeam" method="post">
+                    <input type="hidden" name="PlayerId" value="@player.Id" />
+                    <input type="hidden" name="TeamId" value="@Model.TeamId" />
+
+                    <input type="submit" value="Remove" class="btn btn-danger" />
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

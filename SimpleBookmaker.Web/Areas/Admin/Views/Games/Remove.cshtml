@@ -1,0 +1,16 @@
+﻿@model GameDetailedModel
+
+@{
+    ViewData["Title"] = "Remove Game";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h4>Are you sure you wish to remove the game between <b class="text-danger">@Model.HomeTeam</b> and <b class="text-danger">@Model.AwayTeam</b> on @Model.Kickoff.ToShortDateString()?</h4>
+
+<form asp-action="Remove"method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <input type="hidden" name="TournamentId" value="@Model.TournamentId" />
+
+    <input type="submit" value="Confirm" class="btn btn-primary" />
+</form>

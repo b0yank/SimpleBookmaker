@@ -1,0 +1,43 @@
+{
+  "name": "jquery-datetime-picker-bygiro",
+  "authors": [
+    "ByGiro <girotomaselli@gmail.com>"
+  ],
+  "contributors": [],
+  "main": [
+    "dist/jquery.datetimepicker.ByGiro.js"
+  ],
+  "description": "Fully featured datetimepicker",
+  "keywords": [
+    "form",
+    "ByGiro",
+    "datetime picker"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">=1.8.x",
+    "bootstrap": ">=2.3.x"
+  },
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "mocha": "~1.21.4"
+  },
+  "homepage": "https://github.com/bygiro/jquery-datetime-picker-ByGiro",
+  "_release": "5ee6dfc88f",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "5ee6dfc88f9a4bdb7cc17513b4e78db415c3c658"
+  },
+  "_source": "https://github.com/bygiro/jquery-datetime-picker-ByGiro.git",
+  "_target": "*",
+  "_originalSource": "jquery-datetimepicker",
+  "_direct": true
+}
