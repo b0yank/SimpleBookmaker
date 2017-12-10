@@ -14,19 +14,19 @@
     {
         private const int gameListPageSize = 30;
 
-        private IBetsService bets;
+        private IGameBetsService gameBets;
         private IGamesService games;
         private ITeamsService teams;
         private ITournamentsService tournaments;
         private IPlayersService players;
 
-        public GamesController(IBetsService bets, 
+        public GamesController(IGameBetsService gameBets, 
             ITeamsService teams, 
             IGamesService games, 
             ITournamentsService tournaments,
             IPlayersService players)
         {
-            this.bets = bets;
+            this.gameBets = gameBets;
             this.games = games;
             this.teams = teams;
             this.tournaments = tournaments;
@@ -52,7 +52,8 @@
                 Games = games,
                 Tournaments = allTournaments,
                 CurrentPage = page,
-                TotalPages = this.games.UpcomingCount(tournamentId)
+                TotalPages = this.games.UpcomingCount(tournamentId),
+                RequestPath = $"bookmaker/games/{tournamentId}"
             };
 
             return View(viewModel);
@@ -66,8 +67,13 @@
                 return NotFound(ErrorMessages.InvalidGame);
             }
 
-            var existingCoefficients = this.bets.ExistingGameCoefficients(gameId);
-            var possibleCoefficients = this.bets.PossibleGameCoefficients(gameId);
+            if (!this.gameBets.HasBasicCoefficients(gameId))
+            {
+                ModelState.AddModelError("", ErrorMessages.GameLacksBasicCoefficients);
+            }
+
+            var existingCoefficients = this.gameBets.ExistingGameCoefficients(gameId);
+            var possibleCoefficients = this.gameBets.PossibleGameCoefficients(gameId);
             var teams = this.games.GetTeams(gameId);
 
 
@@ -89,7 +95,7 @@
         {
             if (ModelState.IsValid)
             {
-                var success = this.bets.AddGameCoefficient(model.GameId, model.BetType, model.Side, model.Coefficient, model.HomeGoals, model.AwayGoals);
+                var success = this.gameBets.AddGameCoefficient(model.GameId, model.BetType, model.Side, model.Coefficient, model.HomeGoals, model.AwayGoals);
 
                 if (!success)
                 {
@@ -108,8 +114,8 @@
                 return NotFound(ErrorMessages.InvalidGame);
             }
 
-            var existingCoefficients = this.bets.ExistingGamePlayerCoefficients(gameId);
-            var possibleCoefficients = this.bets.PossibleGamePlayerCoefficients();
+            var existingCoefficients = this.gameBets.ExistingGamePlayerCoefficients(gameId);
+            var possibleCoefficients = this.gameBets.PossibleGamePlayerCoefficients();
 
             var teams = this.games.GetTeams(gameId);
             var homePlayers = this.players.ByTeam(teams.HomeTeam);
@@ -143,7 +149,7 @@
                 return NotFound(ErrorMessages.InvalidPlayer);
             }
 
-            var success = this.bets.AddPlayerGameCoefficient(model.PlayerId, 
+            var success = this.gameBets.AddPlayerGameCoefficient(model.PlayerId, 
                 model.GameId, 
                 model.BetType, 
                 model.Coefficient);
@@ -162,7 +168,7 @@
         {
             if (ModelState.IsValid)
             {
-                this.bets.EditCoefficient(model.CoefficientId, model.NewCoefficient, BetType.Game);
+                this.gameBets.EditCoefficient(model.CoefficientId, model.NewCoefficient, BetType.Game);
             }
 
             return RedirectToAction(nameof(SetBets), new { gameId = model.SubjectId });
@@ -171,7 +177,7 @@
         [HttpPost]
         public IActionResult RemoveCoefficient(RemoveCoefficientModel model)
         {
-            this.bets.RemoveCoefficient(model.CoefficientId, BetType.Game);
+            this.gameBets.RemoveCoefficient(model.CoefficientId, BetType.Game);
 
             return RedirectToAction(nameof(SetBets), new { gameId = model.SubjectId });
         }
@@ -182,7 +188,7 @@
         {
             if (ModelState.IsValid)
             {
-                this.bets.EditCoefficient(model.CoefficientId, model.NewCoefficient, BetType.PlayerGame);
+                this.gameBets.EditCoefficient(model.CoefficientId, model.NewCoefficient, BetType.PlayerGame);
             }
 
             return RedirectToAction(nameof(SetPlayerBets), new { gameId = model.SubjectId });
@@ -191,7 +197,7 @@
         [HttpPost]
         public IActionResult RemovePlayerCoefficient(RemoveCoefficientModel model)
         {
-            this.bets.RemoveCoefficient(model.CoefficientId, BetType.PlayerGame);
+            this.gameBets.RemoveCoefficient(model.CoefficientId, BetType.PlayerGame);
 
             return RedirectToAction(nameof(SetPlayerBets), new { gameId = model.SubjectId });
         }

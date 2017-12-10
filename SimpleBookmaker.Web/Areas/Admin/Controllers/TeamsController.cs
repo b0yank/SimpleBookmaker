@@ -20,6 +20,7 @@
             this.tournaments = tournaments;
         }
 
+        [Route("{page?}/{keyword?}")]
         public IActionResult All(int page = 1, string keyword = null)
         {
             var teamsList = this.teams.All(page, allTeamsListPageSize, keyword);
@@ -28,7 +29,8 @@
             {
                 Teams = teamsList,
                 CurrentPage = page,
-                TotalPages = (int) Math.Ceiling(this.teams.Count(keyword) / (double)allTeamsListPageSize)
+                TotalPages = (int) Math.Ceiling(this.teams.Count(keyword) / (double)allTeamsListPageSize),
+                RequestPath = $"admin/teams/all"
             };
 
             return View(viewModel);

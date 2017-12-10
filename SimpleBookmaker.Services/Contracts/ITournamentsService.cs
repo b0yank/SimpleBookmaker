@@ -20,6 +20,8 @@
 
         IEnumerable<TournamentListModel> All();
 
+        IEnumerable<TournamentListModel> AllImportant(int count, bool upcoming = true);
+
         IEnumerable<TournamentListModel> WithTeam(int teamId);
 
         IEnumerable<TournamentListModel> WithoutTeam(int teamId);

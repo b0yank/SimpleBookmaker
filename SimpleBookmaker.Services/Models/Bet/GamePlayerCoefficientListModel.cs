@@ -1,14 +1,13 @@
 ﻿namespace SimpleBookmaker.Services.Models.Bet
 {
     using AutoMapper;
-    using Data.Core.Enums;
     using Data.Models.Coefficients;
     using Infrastructure.AutoMapper;
     using Infrastructure.BetDescribers;
 
     public class GamePlayerCoefficientListModel : CoefficientModel, IMapFrom<PlayerGameBetCoefficient>, IHaveCustomMapping
     {
-        public void ConfigureMapping(Profile mapper)
+        public override void ConfigureMapping(Profile mapper)
         {
             mapper.CreateMap<PlayerGameBetCoefficient, GamePlayerCoefficientListModel>()
                 .ForMember(pgcl => pgcl.BetCondition, cfg => cfg.MapFrom(pgbc => GamePlayerBetDescriber.Describe(pgbc.BetType, pgbc.Player.Name)))

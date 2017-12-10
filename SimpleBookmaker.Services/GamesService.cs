@@ -56,13 +56,23 @@
             this.db.SaveChanges();
         }
 
-        public IEnumerable<GameListModel> Upcoming(int page = 1, int pageSize = 20)
-            => this.db.Games
+        public IEnumerable<GameListModel> Upcoming(int page = 1, int pageSize = 20, int tournamentId = 0)
+        {
+            var games = this.db.Games.AsQueryable();
+
+            if (this.TournamentExists(tournamentId))
+            {
+                games = games.Where(g => g.TournamentId == tournamentId);
+            }
+
+            return games
                 .Where(g => g.Time > DateTime.UtcNow)
                 .OrderBy(g => g.Time)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ProjectTo<GameListModel>();
+        }
+            
             
 
         public int UpcomingCount(int tournamentId)

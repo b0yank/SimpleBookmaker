@@ -409,6 +409,8 @@ namespace SimpleBookmaker.Data.Migrations
 
                     b.Property<DateTime>("EndDate");
 
+                    b.Property<int>("Importance");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50);

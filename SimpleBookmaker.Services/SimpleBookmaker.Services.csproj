@@ -7,7 +7,10 @@
   <ItemGroup>
     <Compile Remove="BetResolvers\GameBetResolvers\CleanSheetGameBetResolver.cs" />
     <Compile Remove="BetResolvers\GameBetResolvers\MorePossessionGameBetResolver.cs" />
+    <Compile Remove="BetsService.cs" />
+    <Compile Remove="Contracts\IBetsService.cs" />
     <Compile Remove="Models\Tournament\TournamentEditModel.cs" />
+    <Compile Remove="Models\Tournament\TournamentImportanceListModel.cs" />
   </ItemGroup>
 
   <ItemGroup>

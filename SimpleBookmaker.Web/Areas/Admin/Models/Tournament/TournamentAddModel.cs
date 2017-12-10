@@ -11,6 +11,9 @@
         [RegularExpression("[a-zA-Z0-9 /]+", ErrorMessage = "Tournament name can only contain letters, digits, whitespace and '/'.")]
         public string Name { get; set; }
 
+        [Range(1, 10, ErrorMessage = "Tournament importance must be between 1 and 10")]
+        public int Importance { get; set; }
+
         [DataType(DataType.Date)]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }

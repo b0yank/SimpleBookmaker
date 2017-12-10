@@ -10,6 +10,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using SimpleBookmaker.Web.Infrastructure.Extensions;
+    using System;
 
     public class Startup
     {
@@ -37,6 +38,12 @@
 
             services.UseServices();
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(7);
+                options.Cookie.HttpOnly = true;
+            });
+
             services.AddAutoMapper();
 
             services.AddMvc();
@@ -62,6 +69,8 @@
             app.UseDatabaseMigration();
 
             app.UseDefaultRoles();
+
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

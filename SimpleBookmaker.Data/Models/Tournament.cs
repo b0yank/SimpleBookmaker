@@ -24,6 +24,9 @@
 
         public ICollection<Game> Games { get; set; } = new List<Game>();
 
+        [Range(1, 10, ErrorMessage = "Tournament importance must be between 1 and 10")]
+        public int Importance { get; set; }
+
         public DateTime StartDate { get; set; }
 
         [DateAfter("StartDate")]

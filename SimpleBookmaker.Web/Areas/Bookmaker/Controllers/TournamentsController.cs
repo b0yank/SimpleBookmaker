@@ -11,17 +11,17 @@
 
     public class TournamentsController : BookmakerBaseController
     {
-        private readonly IBetsService bets;
+        private readonly ITournamentBetsService tournamentBets;
         private readonly ITeamsService teams;
         private readonly ITournamentsService tournaments;
         private readonly IPlayersService players;
 
-        public TournamentsController(IBetsService bets,
+        public TournamentsController(ITournamentBetsService tournamentBets,
             ITeamsService teams,
             ITournamentsService tournaments,
             IPlayersService players)
         {
-            this.bets = bets;
+            this.tournamentBets = tournamentBets;
             this.teams = teams;
             this.tournaments = tournaments;
             this.players = players;
@@ -42,8 +42,8 @@
                 return NotFound(ErrorMessages.InvalidTournament);
             }
 
-            var existingCoefficients = this.bets.ExistingTournamentCoefficients(tournamentId);
-            var possibleCoefficients = this.bets.PossibleTournamentCoefficients();
+            var existingCoefficients = this.tournamentBets.ExistingTournamentCoefficients(tournamentId);
+            var possibleCoefficients = this.tournamentBets.PossibleTournamentCoefficients();
             var teams = this.tournaments.GetTeams(tournamentId);
 
             var viewModel = new SetTournamentCoefficientsModel
@@ -83,7 +83,7 @@
 
             if (ModelState.IsValid)
             {
-                var success = this.bets.AddTournamentCoefficient(model.TournamentId, model.SubjectId, model.Coefficient, model.BetType);
+                var success = this.tournamentBets.AddTournamentCoefficient(model.TournamentId, model.SubjectId, model.Coefficient, model.BetType);
 
                 if (!success)
                 {
@@ -121,7 +121,7 @@
         {
             if (ModelState.IsValid)
             {
-                this.bets.EditCoefficient(model.CoefficientId, model.NewCoefficient, BetType.Tournament);
+                this.tournamentBets.EditCoefficient(model.CoefficientId, model.NewCoefficient);
             }
 
             return RedirectToAction(nameof(SetBets), new { tournamentId = model.SubjectId });
@@ -130,7 +130,7 @@
         [HttpPost]
         public IActionResult RemoveCoefficient(RemoveCoefficientModel model)
         {
-            this.bets.RemoveCoefficient(model.CoefficientId, BetType.Tournament);
+            this.tournamentBets.RemoveCoefficient(model.CoefficientId);
 
             return RedirectToAction(nameof(SetBets), new { tournamentId = model.SubjectId });
         }

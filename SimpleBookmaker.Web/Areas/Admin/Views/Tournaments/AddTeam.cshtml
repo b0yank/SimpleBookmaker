@@ -12,7 +12,7 @@
 
     <form asp-action="AddTeam" method="post">
         <div class="form-group">
-            <select name="Teams" multiple>
+            <select name="Teams" multiple class="form-control">
                 @foreach (var team in Model.AvailableTeams)
                 {
                     <option value="@team.Id">@team.Name</option>

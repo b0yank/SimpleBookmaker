@@ -14,7 +14,7 @@
 
         bool Exists(int gameId);
 
-        IEnumerable<GameListModel> Upcoming(int page = 1, int pageSize = 20);
+        IEnumerable<GameListModel> Upcoming(int page = 1, int pageSize = 20, int tournamentId = 0);
 
         GameDetailedModel ById(int id);
 

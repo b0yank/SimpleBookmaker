@@ -32,7 +32,8 @@
             {
                 Users = usersList,
                 CurrentPage = page,
-                TotalPages = (int) Math.Ceiling(this.users.Count(keyword) / (double)usersListPageSize)
+                TotalPages = (int) Math.Ceiling(this.users.Count(keyword) / (double)usersListPageSize),
+                RequestPath = "admin/users/all"
             };
 
             return View(viewModel);

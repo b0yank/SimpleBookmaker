@@ -1,8 +1,91 @@
-﻿@{
+﻿@model IDictionary<TournamentListModel, ICollection<GameBasicCoefficientsListModel>>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+
+@foreach (var tournament in Model.Keys)
+{
+    <div class="ticketBox">
+        <div class="inactiveStatus"></div>
+
+        <div class="row" style="background-color:azure">
+            <div class="col-xs-9">
+                <div class="ticket-name">
+                    <div class="col-xs-8">
+                        <a asp-controller="Tournaments" asp-action="View" asp-route-id="@tournament.Id">
+                            @tournament.Name
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-1" style="text-align:center">
+                1
+            </div>
+            <div class="col-xs-1" style="text-align:center">
+                X
+            </div>
+            <div class="col-xs-1" style="text-align:center">
+                2
+            </div>
+        </div>
+
+        <div class="ticket-description">
+            @foreach (var game in Model[tournament])
+            {
+                <div class="row">
+                    <div class="col-xs-9">
+                        <div class="col-xs-8">
+                            <a asp-controller="Games" asp-action="View" asp-route-id="@game.Id">
+                                @game.Name
+                            </a>
+                        </div>
+
+                        <div class="col-xs-4"><span>@game.Kickoff.ToShortDateString() @game.Kickoff.Hour : @game.Kickoff.Minute</span></div>
+                    </div>
+                    <div class="col-xs-1">
+                        <form asp-action="AddToBetSlip" method="post">
+                            <input type="hidden" name="CoefficientId" value="@game.CoefficientHomeId" />
+                            <input type="hidden" name="BetType" value="@BetType.Game" />
+                            <input type="hidden" name="Coefficient" value="@game.CoefficientHome" />
+                            <input type="hidden" name="BetCondition" value="@GameBetDescriber.Describe(GameBetType.Outcome, BetSide.Home, null)" />
+                            
+                            <input type="submit" class="btn-number" value="@game.CoefficientHome.ToString("F2")">
+                        </form>
+                    </div>
+                    <div class="col-xs-1">
+                        <form asp-action="AddToBetSlip" method="post">
+                            <input type="hidden" name="CoefficientId" value="@game.CoefficientDrawId" />
+                            <input type="hidden" name="BetType" value="@BetType.Game" />
+                            <input type="hidden" name="Coefficient" value="@game.CoefficientDraw" />
+                            <input type="hidden" name="BetCondition" value="@GameBetDescriber.Describe(GameBetType.Outcome, BetSide.Neutral, null)" />
+
+                            <input type="submit" class="btn-number" value="@game.CoefficientDraw.ToString("F2")">
+                        </form>
+                    </div>
+                    <div class="col-xs-1">
+                        <form asp-action="AddToBetSlip" method="post">
+                            <input type="hidden" name="CoefficientId" value="@game.CoefficientAwayId" />
+                            <input type="hidden" name="BetType" value="@BetType.Game" />
+                            <input type="hidden" name="Coefficient" value="@game.CoefficientAway" />
+                            <input type="hidden" name="BetCondition" value="@GameBetDescriber.Describe(GameBetType.Outcome, BetSide.Away, null)" />
+
+                            <input type="submit" class="btn-number" value="@game.CoefficientAway.ToString("F2")">
+                        </form>
+                    </div>
+                </div>
+                <hr />
+            }
+        </div>
+    </div>
+}
+
+
+
+
+
+@*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -66,43 +149,46 @@
 </div>
 
 <div class="row">
-    <div class="col-md-3">
-        <h2>Application uses</h2>
-        <ul>
-            <li>Sample pages using ASP.NET Core MVC</li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=518004">Bower</a> for managing client-side libraries</li>
-            <li>Theming using <a href="https://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
-        </ul>
+    <div class="col-lg-3 col-md-1 col-sm-0"></div>
+
+    <div class="col-lg-6 col-md-10 col-sm-12">
+        @foreach (var tournament in Model.Keys)
+        {
+            <h4>
+                <a asp-controller="Tournaments"
+                   asp-action="Index"
+                   asp-route-tournamentId="@tournament.Id">
+                    @tournament.Name
+                </a>
+            </h4>
+
+            @foreach (var game in Model[tournament])
+            {
+                <h6>
+                    <a asp-controller="Games"
+                       asp-action="Index"
+                       asp-route-gameId="@game.Key.Id">
+                        @game.Key.HomeTeam -  @game.Key.AwayTeam @game.Key.Kickoff.ToShortDateString() @game.Key.Kickoff.Hour : @game.Key.Kickoff.Minute
+                    </a>
+                </h6>
+                <ul class="list-group">
+                    @foreach (var coefficient in game.Value)
+                    {
+                        <li class="list-group-item">
+                            @coefficient.BetCondition @coefficient.Coefficient
+                            <a asp-controller="Users"
+                               asp-action="AddToSlip"
+                               asp-route-coefficientId="@coefficient.CoefficientId"
+                               asp-route-betType="@(BetType.Game)"
+                               class="btn btn-primary">
+                                Add To Slip
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+        }
     </div>
-    <div class="col-md-3">
-        <h2>How to</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398600">Add a Controller and View</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699315">Manage User Secrets using Secret Manager.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699316">Use logging to log a message.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699317">Add packages using NuGet.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699318">Add client packages using Bower.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699319">Target development, staging or production environment.</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Overview</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=518008">Conceptual overview of what is ASP.NET Core</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699320">Fundamentals of ASP.NET Core such as Startup and middleware.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398602">Working with Data</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398603">Security</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699321">Client side development</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699322">Develop on different platforms</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699323">Read more on the documentation site</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Run &amp; Deploy</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517851">Run your app</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517853">Run tools such as EF migrations and more</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
-        </ul>
-    </div>
-</div>
+
+    <div class="col-lg-3 col-md-1 col-sm-0"></div>
+</div>*@

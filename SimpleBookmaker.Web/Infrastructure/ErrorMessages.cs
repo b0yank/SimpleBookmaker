@@ -12,5 +12,6 @@
         public const string TeamTournamentAddFailed = "Could not add team(s) to tournament. Tournament and/or one or more teams are invalid.";
         public const string TeamAlreadyInTournament = "The chosen team is already signed up for this tournament.";
         public const string TournamentRemoveFailed = "Failed to remove tournament. Perhaps there are still unresolved bets for one or more games?";
+        public const string GameLacksBasicCoefficients = "Warning - game does not have coefficients for outcomes 1, X and 2";
     }
 }

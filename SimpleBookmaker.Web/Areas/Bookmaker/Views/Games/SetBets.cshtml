@@ -7,6 +7,7 @@
 <h2>Set Bets for @Model.HomeTeam vs @Model.AwayTeam</h2>
 
 <a asp-action="SetPlayerBets" asp-route-gameId="@Model.GameId" class="btn btn-primary">Go to player coefficients</a>
+<a asp-action="All"  class="btn btn-default">Back to upcoming games</a>
 
 @{
     await Html.RenderPartialAsync("_ExistingCoefficientsPartial",

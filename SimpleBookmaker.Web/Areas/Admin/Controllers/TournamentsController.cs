@@ -172,7 +172,8 @@
                 Tournament = tournament,
                 Games = tournamentGames,
                 CurrentPage = page,
-                TotalPages = (int) Math.Ceiling(gamesCount / (double)gamesListPageSize)
+                TotalPages = (int) Math.Ceiling(gamesCount / (double)gamesListPageSize),
+                RequestPath = $"admin/tournaments/games/{tournamentId}"
             };
 
             return View(viewModel);

@@ -18,9 +18,28 @@
         {
         }
 
+        public IEnumerable<TournamentListModel> AllImportant(int count = 5, bool upcoming = true)
+        {
+            var tournaments =  this.db.Tournaments.AsQueryable();
+
+            if (upcoming)
+            {
+                tournaments = tournaments.Where(t => t.EndDate > DateTime.UtcNow);
+            }
+
+            return tournaments
+                    .OrderByDescending(t => t.Importance)
+                    .Take(count)
+                    .ProjectTo<TournamentListModel>();
+        }
+
         public IEnumerable<TournamentListModel> All()
-            => this.db.Tournaments
+        {
+            var tournaments = this.db.Tournaments.AsQueryable();
+
+            return this.db.Tournaments
                 .ProjectTo<TournamentListModel>();
+        }
 
         public bool Add(string name, DateTime startDate, DateTime endDate)
         {
