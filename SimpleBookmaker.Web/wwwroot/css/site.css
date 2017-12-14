@@ -44,6 +44,10 @@ table.column-centered input {
     text-align: center;
 }
 
+div.column-centered {
+    text-align: center;
+}
+
 tr.column-centered td {
     text-align: center;
 }

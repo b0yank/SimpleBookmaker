@@ -555,6 +555,10 @@ iframe {
         }
 }
 
+.column-centered {
+    text-align: center;
+}
+
 .loginForm {
     position: relative;
     z-index: 99;

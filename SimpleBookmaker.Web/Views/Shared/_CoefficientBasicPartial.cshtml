@@ -1,0 +1,11 @@
+﻿@model UserGameCoefficientModel
+
+<form asp-controller="Home" asp-action="AddToBetSlip" method="post">
+    <input type="hidden" name="CoefficientId" value="@Model.CoefficientId" />
+    <input type="hidden" name="BetType" value="@BetType.Game" />
+    <input type="hidden" name="Coefficient" value="@Model.Coefficient" />
+    <input type="hidden" name="EventName" value="@Model.EventName" />
+    <input type="hidden" name="BetCondition" value="@Model.BetCondition" />
+
+    <input type="submit" class="btn" value="@Model.Coefficient.ToString("F2")" style="margin-left: -10px">
+</form>

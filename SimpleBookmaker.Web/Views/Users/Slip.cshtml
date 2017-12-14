@@ -1,0 +1,65 @@
+﻿@model BetSlipViewModel
+
+@{
+    ViewData["Title"] = "Your Current Bet Slip";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div asp-validation-summary="All" class="alert-danger"></div>
+
+<hr />
+
+@if (Model.Bets.Count() == 0)
+{
+    <h4>Your bet slip is currently empty.</h4>
+}
+else
+{
+    <h4>Your balance: $@Model.Balance</h4>
+
+    <table class="table table-hover">
+        <colgroup>
+            <col span="1" class="col-xs-3" />
+            <col span="1" class="col-xs-3" />
+            <col span="1" class="col-xs-1" />
+            <col span="1" class="col-xs-2" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Condition</th>
+                <th>Event</th>
+                <th>Coefficient</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var bet in Model.Bets)
+            {
+                <tr>
+                    <td>@bet.BetCondition</td>
+                    <td>@bet.EventName</td>
+                    <td>@bet.Coefficient.ToString("F2")</td>
+                    <td>
+                        <form asp-action="RemoveBet" method="post">
+                            <input type="hidden" name="CoefficientId" value="@bet.CoefficientId" />
+                            <input type="hidden" name="BetType" value="@bet.BetType" />
+                            <input type="submit" value="Remove" class="btn btn-default" />
+                        </form>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td></td>
+                <td><input type="text" name="Amount" form="addBets" placeholder="Enter amount to bet" style="float:right" class="form-control"/></td>
+                <td><strong>@Model.Bets.Sum(b => b.Coefficient).ToString("F2")</strong></td>
+                <td>
+                    <form asp-action="PlaceBets" method="post" id="addBets">
+
+                        <input type="submit" class="btn" value="Place Bets" />
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

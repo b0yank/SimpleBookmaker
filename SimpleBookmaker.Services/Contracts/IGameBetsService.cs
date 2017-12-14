@@ -2,7 +2,7 @@
 {
     using Data.Core.Enums;
     using Models.Bet;
-    using Services.Models.Coefficient;
+    using Models.UserCoefficient;
     using System.Collections.Generic;
 
     public interface IGameBetsService : IService

@@ -73,7 +73,17 @@
                 .ProjectTo<GameListModel>();
         }
             
-            
+        public DateTime? GetGametime(int gameId)
+        {
+            var game = this.db.Games.Find(gameId);
+
+            if (game == null)
+            {
+                return null;
+            }
+
+            return game.Time;
+        }
 
         public int UpcomingCount(int tournamentId)
         {
@@ -113,10 +123,7 @@
             this.db.SaveChanges();
         }
 
-        public GameTeamsModel GetTeams(int gameId)
-            => this.db.Games
-                .Where(g => g.Id == gameId)
-                .ProjectTo<GameTeamsModel>()
-                .FirstOrDefault();
+        public GameTeamsModel GetGameTeams(int gameId)
+            => GetTeams(gameId);
     }
 }

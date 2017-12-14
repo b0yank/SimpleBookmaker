@@ -1,0 +1,31 @@
+﻿@model UserProfileModel
+
+@{ 
+    ViewData["Title"] = "Your Profile";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<hr />
+
+<div class="form-group">
+    <div class="row">
+        <label class="control-label col-xs-2">Name: </label>
+        <div class="cl-xs-3">@Model.Name</div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <label class="control-label col-xs-2">Email: </label>
+        <div class="cl-xs-3">@Model.Email</div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <label class="control-label col-xs-2">Balance: </label>
+        <div class="cl-xs-3">$@Model.Balance.ToString("F2")</div>
+    </div>
+</div>
+
+<a asp-action="Slip" class="btn btn-default">Your Bet Slip</a>
+<a asp-action="History" class="btn btn-default">Bet History</a>

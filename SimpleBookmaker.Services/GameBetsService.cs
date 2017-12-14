@@ -7,7 +7,8 @@
     using Data.Models.Coefficients;
     using Infrastructure.BetDescribers;
     using Models.Bet;
-    using Services.Models.Coefficient;
+    using Models.Game;
+    using Models.UserCoefficient;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -35,13 +36,19 @@
             }
 
             var coefficientHome = this.db.GameBetCoefficients
-                .FirstOrDefault(gbc => gbc.GameId == gameId && gbc.BetType == GameBetType.Outcome && gbc.Side == BetSide.Home);
+                .Where(gbc => gbc.GameId == gameId && gbc.BetType == GameBetType.Outcome && gbc.Side == BetSide.Home)
+                .ProjectTo<UserGameCoefficientModel>()
+                .FirstOrDefault(); ;
 
             var coefficientDraw = this.db.GameBetCoefficients
-                .FirstOrDefault(gbc => gbc.GameId == gameId && gbc.BetType == GameBetType.Outcome && gbc.Side == BetSide.Neutral);
+                .Where(gbc => gbc.GameId == gameId && gbc.BetType == GameBetType.Outcome && gbc.Side == BetSide.Neutral)
+                .ProjectTo<UserGameCoefficientModel>()
+                .FirstOrDefault();
 
             var coefficientAway = this.db.GameBetCoefficients
-                .FirstOrDefault(gbc => gbc.GameId == gameId && gbc.BetType == GameBetType.Outcome && gbc.Side == BetSide.Away);
+                .Where(gbc => gbc.GameId == gameId && gbc.BetType == GameBetType.Outcome && gbc.Side == BetSide.Away)
+                .ProjectTo<UserGameCoefficientModel>()
+                .FirstOrDefault(); ;
 
             if (coefficientHome == null
                 || coefficientDraw == null
@@ -53,14 +60,11 @@
             var gameBasicCoefficients = new GameBasicCoefficientsListModel
             {
                 Id = gameId,
-                Name = $"{game.HomeTeam} vs {game.AwayTeam}",
+                Teams = new GameTeamsModel { HomeTeam = game.HomeTeam, AwayTeam = game.AwayTeam },
                 Kickoff = game.Kickoff,
-                CoefficientHomeId = coefficientHome.Id,
-                CoefficientHome = coefficientHome.Coefficient,
-                CoefficientDrawId = coefficientDraw.Id,
-                CoefficientDraw = coefficientDraw.Coefficient,
-                CoefficientAwayId = coefficientAway.Id,
-                CoefficientAway = coefficientAway.Coefficient
+                CoefficientHome = coefficientHome,
+                CoefficientDraw = coefficientDraw,
+                CoefficientAway = coefficientAway
             };
 
             return gameBasicCoefficients;
@@ -135,6 +139,7 @@
 
             return this.db.GameBetCoefficients
                     .Where(gbc => gbc.GameId == gameId)
+                    .OrderBy(gbc => gbc.BetType)
                     .ProjectTo<GameCoefficientListModel>();
         }
 
@@ -161,6 +166,7 @@
         public IEnumerable<GamePlayerCoefficientListModel> ExistingGamePlayerCoefficients(int gameId)
             => this.db.PlayerGameBetCoefficients
                 .Where(pgbc => pgbc.GameId == gameId)
+                .OrderBy(pgbc => pgbc.BetType)
                 .ProjectTo<GamePlayerCoefficientListModel>();
 
         public bool AddPlayerGameCoefficient(int playerId,

@@ -1,5 +1,6 @@
 ﻿namespace SimpleBookmaker.Services
 {
+    using AutoMapper.QueryableExtensions;
     using Contracts;
     using Data;
     using Data.Models;
@@ -19,6 +20,18 @@
         {
             this.db = db;
             this.userManager = userManager;
+        }
+
+        public UserProfileModel Profile(string username)
+        {
+            var user = this.db.Users.Where(u => u.UserName == username);
+
+            if (user.Count() == 0)
+            {
+                return null;
+            }
+
+            return user.ProjectTo<UserProfileModel>().First();
         }
 
         public async Task<IEnumerable<UserListModel>> AllAsync(int page = 1, int pageSize = 20, string keyword = null)
@@ -63,6 +76,9 @@
 
             return this.UsersWithKeyword(this.db.Users.AsQueryable(), keyword).Count();
         }
+
+        public decimal GetBalance(string username)
+            => this.db.Users.First(u => u.UserName == username).Balance;
 
         private IQueryable<User> UsersWithKeyword(IQueryable<User> users, string keyword)
         {

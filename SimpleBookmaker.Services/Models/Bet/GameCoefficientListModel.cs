@@ -5,6 +5,7 @@
     using Data.Models.Coefficients;
     using Infrastructure.AutoMapper;
     using Infrastructure.BetDescribers;
+    using Models.Game;
 
     public class GameCoefficientListModel : CoefficientModel, IHaveCustomMapping
     {
@@ -17,7 +18,7 @@
                             g.BetType,
                             g.Side,
                             (g.BetType != GameBetType.Result
-                                ? null
+                                ? (object)new GameTeamsModel { HomeTeam = g.Game.HomeTeam.Team.Name, AwayTeam = g.Game.AwayTeam.Team.Name }
                                 : new ResultDescriber { HomeScore = g.HomeScorePrediction, AwayScore = g.AwayScorePrediction }))))
                 .ForMember(gbc => gbc.SubjectId, cfg => cfg.MapFrom(gbc => gbc.GameId))
                 .ForMember(gbc => gbc.CoefficientId, cfg => cfg.MapFrom(gbc => gbc.Id));

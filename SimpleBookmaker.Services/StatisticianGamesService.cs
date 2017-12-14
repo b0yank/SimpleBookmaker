@@ -3,8 +3,6 @@
     using AutoMapper.QueryableExtensions;
     using Contracts;
     using Data.Core.Enums;
-    using Data.Models;
-    using Data.Models.BetSlips;
     using Services.BetResolvers.Contracts;
     using Services.Infrastructure.BetDescribers;
     using Services.Models.Game;
@@ -71,9 +69,10 @@
             {
                 var betResolver = this.gameBetResolverFactory.GetResolver(gameBet.BetCoefficient.BetType);
 
-                var additional = gameBet.BetCoefficient.BetType == GameBetType.Result ?
-                    new ResultDescriber() { HomeScore = gameBet.HomeGoals, AwayScore = gameBet.AwayGoals } :
-                    null;
+                var additional = gameBet.BetCoefficient.BetType == GameBetType.Result
+                    ? new ResultDescriber() { HomeScore = gameBet.BetCoefficient.HomeScorePrediction,
+                                            AwayScore = gameBet.BetCoefficient.AwayScorePrediction }
+                    : (object) GetTeams(gameBet.BetCoefficient.GameId);
 
                 gameBet.IsSuccess = betResolver.Resolve(gameStats, gameBet.BetCoefficient.Side, additional);
                 gameBet.IsEvaluated = true;
@@ -81,6 +80,7 @@
 
             this.db.SaveChanges();
 
+            // move resolved bet slips to history and pay what is necessary to user
             foreach (var gameBet in gameBets)
             {
                 var betSlip = this.db.GameBetSlips.Include(bs => bs.GameBets).First(bs => bs.Id == gameBet.BetSlipId);
@@ -96,8 +96,8 @@
                     foreach (var bet in betSlip.GameBets)
                     {
                         var additionalInfo = bet.BetCoefficient.BetType == GameBetType.Result ?
-                            new ResultDescriber() { HomeScore = bet.HomeGoals, AwayScore = bet.AwayGoals } :
-                            null;
+                            new ResultDescriber() { HomeScore = bet.BetCoefficient.HomeScorePrediction, AwayScore = bet.BetCoefficient.AwayScorePrediction } :
+                            (object) GetTeams(bet.BetCoefficient.GameId);
 
                         var betDescription = GameBetDescriber
                             .Describe(bet.BetCoefficient.BetType, bet.BetCoefficient.Side, additionalInfo);

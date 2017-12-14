@@ -9,6 +9,7 @@
     <Compile Remove="BetResolvers\GameBetResolvers\MorePossessionGameBetResolver.cs" />
     <Compile Remove="BetsService.cs" />
     <Compile Remove="Contracts\IBetsService.cs" />
+    <Compile Remove="Models\Bet\UserGameCoefficientModel.cs" />
     <Compile Remove="Models\Tournament\TournamentEditModel.cs" />
     <Compile Remove="Models\Tournament\TournamentImportanceListModel.cs" />
   </ItemGroup>

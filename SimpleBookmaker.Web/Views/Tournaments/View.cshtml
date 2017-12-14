@@ -1,0 +1,59 @@
+﻿@model TournamentCoefficientsViewModel
+
+@{
+    ViewData["Title"] = "Tournament Coefficients";
+}
+
+<h2>Coefficients for @Model.Tournament</h2>
+
+<div asp-validation-summary="All" class="alert-danger"></div>
+
+<div class="ticketBox">
+    <div class="ticket-description">
+        @foreach (var coefficient in Model.Coefficients)
+        {
+            <div class="row">
+                <div class="col-xs-8">
+                    @coefficient.BetCondition
+                </div>
+                <div class="col-xs-2">
+                    <form asp-controller="Home" asp-action="AddToBetSlip" method="post">
+                        <input type="hidden" name="CoefficientId" value="@coefficient.CoefficientId" />
+                        <input type="hidden" name="BetType" value="@BetType.Tournament" />
+                        <input type="hidden" name="Coefficient" value="@coefficient.Coefficient" />
+                        <input type="hidden" name="EventName" value="@Model.Tournament" />
+                        <input type="hidden" name="BetCondition" value="@coefficient.BetCondition" />
+
+                        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+
+                        <input type="submit" class="btn" value="@coefficient.Coefficient.ToString("F2")" style="float:right">
+                    </form>
+                </div>
+            </div>
+            <hr />
+        }
+    </div>
+</div>
+
+<h4>Upcoming games:</h4>
+
+<div class="ticketBox">
+    <div class="ticket-description">
+        @foreach (var game in Model.UpcomingGames)
+        {
+            <div class="row">
+                <div class="col-xs-8">
+                    <a asp-controller="Games" asp-action="View" asp-route-id="@game.Id" class="">
+                        @($"{game.HomeTeam} vs {game.AwayTeam}")
+                    </a>
+                </div>
+                <div class="col-xs-4">
+                    @($"{game.Kickoff.ToShortDateString()} - {game.Kickoff.Hour}:{game.Kickoff.Minute}")
+                </div>
+            </div>
+            <hr />
+        }
+    </div>
+
+    @await Html.PartialAsync("_PageNavigation", Model)
+</div>

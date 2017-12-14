@@ -3,19 +3,21 @@
     using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
 
-
     public static class SessionExtensions
     {
-        public static void Set<T>(this ISession session, string key, T value)
+        public static void Set<TModel>(this ISession session, string key, TModel value)
         {
-            session.SetString(key, JsonConvert.SerializeObject(value));
+            var json = JsonConvert.SerializeObject(value);
+
+            session.SetString(key, json);
         }
 
-        public static T Get<T>(this ISession session, string key)
+        public static TModel Get<TModel>(this ISession session, string key)
         {
             var value = session.GetString(key);
-            return value == null ? default(T) :
-            JsonConvert.DeserializeObject<T>(value);
+
+            return value == null ? default(TModel) :
+            JsonConvert.DeserializeObject<TModel>(value);
         }
     }
 }

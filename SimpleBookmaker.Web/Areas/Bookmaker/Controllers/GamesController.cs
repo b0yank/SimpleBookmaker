@@ -74,7 +74,7 @@
 
             var existingCoefficients = this.gameBets.ExistingGameCoefficients(gameId);
             var possibleCoefficients = this.gameBets.PossibleGameCoefficients(gameId);
-            var teams = this.games.GetTeams(gameId);
+            var teams = this.games.GetGameTeams(gameId);
 
 
             var viewModel = new SetBetsViewModel
@@ -117,7 +117,7 @@
             var existingCoefficients = this.gameBets.ExistingGamePlayerCoefficients(gameId);
             var possibleCoefficients = this.gameBets.PossibleGamePlayerCoefficients();
 
-            var teams = this.games.GetTeams(gameId);
+            var teams = this.games.GetGameTeams(gameId);
             var homePlayers = this.players.ByTeam(teams.HomeTeam);
             var awayPlayers = this.players.ByTeam(teams.AwayTeam);
 

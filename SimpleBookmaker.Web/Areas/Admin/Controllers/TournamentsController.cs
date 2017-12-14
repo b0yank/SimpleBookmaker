@@ -1,14 +1,16 @@
 ﻿namespace SimpleBookmaker.Web.Areas.Admin.Controllers
 {
+    using Infrastructure;
     using Microsoft.AspNetCore.Mvc;
     using Models.Tournament;
     using Services.Contracts;
     using Services.Models.Tournament;
-    using SimpleBookmaker.Web.Infrastructure;
     using System;
+    using Web.Models.TournamentViewModels;
     
     public class TournamentsController : AdminBaseController
     {
+        private const int tournamentListPageSize = 20;
         private const int gamesListPageSize = 20;
 
         private ITournamentsService tournaments;
@@ -18,11 +20,21 @@
             this.tournaments = tournaments;
         }
         
-        public IActionResult All()
+        public IActionResult All(int page = 1)
         {
-            var allTournaments = this.tournaments.AllDetailed();
+            var allTournaments = this.tournaments.AllDetailed(page, tournamentListPageSize);
 
-            return View(allTournaments);
+            var tournamentsCount = this.tournaments.Count();
+
+            var viewModel = new TournamentDetailedListPageModel
+            {
+                Tournaments = allTournaments,
+                CurrentPage = page,
+                TotalPages = (int) Math.Ceiling(tournamentsCount / (double)tournamentListPageSize),
+                RequestPath = "admin/tournaments/all"
+            };
+
+            return View(viewModel);
         }
         
         public IActionResult Add() => View();

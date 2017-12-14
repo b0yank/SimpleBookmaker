@@ -152,15 +152,11 @@ namespace SimpleBookmaker.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AwayGoals");
-
                     b.Property<int>("BetSlipId");
 
                     b.Property<double>("Coefficient");
 
                     b.Property<int>("GameBetCoefficientId");
-
-                    b.Property<int>("HomeGoals");
 
                     b.Property<bool>("IsEvaluated");
 

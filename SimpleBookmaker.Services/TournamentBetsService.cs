@@ -73,6 +73,8 @@
             }
 
             return tournamentBetCoefficients
+                    .OrderBy(tbc => tbc.BetType)
+                    .ThenBy(tbc => tbc.Coefficient)
                     .Select(tbc => new TournamentCoefficientListModel
                     {
                         SubjectId = tbc.TournamentId,

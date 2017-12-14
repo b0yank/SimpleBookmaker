@@ -18,14 +18,16 @@
         {
         }
 
+        public int Count(bool upcoming = false)
+        {
+            var tournaments = this.Upcoming(upcoming);
+
+            return tournaments.Count();
+        }
+
         public IEnumerable<TournamentListModel> AllImportant(int count = 5, bool upcoming = true)
         {
-            var tournaments =  this.db.Tournaments.AsQueryable();
-
-            if (upcoming)
-            {
-                tournaments = tournaments.Where(t => t.EndDate > DateTime.UtcNow);
-            }
+            var tournaments = this.Upcoming(upcoming);
 
             return tournaments
                     .OrderByDescending(t => t.Importance)
@@ -33,12 +35,24 @@
                     .ProjectTo<TournamentListModel>();
         }
 
-        public IEnumerable<TournamentListModel> All()
+        public IEnumerable<TournamentListModel> All(bool upcoming = false)
         {
-            var tournaments = this.db.Tournaments.AsQueryable();
+            var tournaments = this.Upcoming(upcoming);
 
             return this.db.Tournaments
                 .ProjectTo<TournamentListModel>();
+        }
+
+        public IEnumerable<TournamentDetailedListModel> AllDetailed(int page = 1, int pageSize = 10, bool upcoming = false)
+        {
+            var tournaments = this.Upcoming(upcoming);
+
+            return tournaments
+                .OrderBy(t => t.EndDate)
+                .ThenByDescending(t => t.Importance)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ProjectTo<TournamentDetailedListModel>();
         }
 
         public bool Add(string name, DateTime startDate, DateTime endDate)
@@ -119,22 +133,16 @@
             return date >= tournament.StartDate && date <= tournament.EndDate;
         }
 
-        public IEnumerable<TournamentDetailedListModel> AllDetailed()
-            => this.db.Tournaments.ProjectTo<TournamentDetailedListModel>();
-
-        public IEnumerable<BaseTeamModel> GetTeams(int tournamentId)
+        public IEnumerable<TournamentDetailedListModel> AllDetailed(bool upcoming = false)
         {
-            if (!this.TournamentExists(tournamentId))
-            {
-                return null;
-            }
+            var tournaments = this.Upcoming(upcoming);
 
-            return this.db.Teams.
-                Where(t => this.db.TournamentsTeams
-                                    .Any(tt => tt.TournamentId == tournamentId
-                                            && tt.TeamId == t.Id))
-                                    .ProjectTo<BaseTeamModel>();
+            return tournaments
+                .ProjectTo<TournamentDetailedListModel>();
         }
+
+        public new IEnumerable<BaseTeamModel> GetTeams(int tournamentId)
+            => GetTeams(tournamentId);
 
         public IEnumerable<BaseTeamModel> GetAvailableTeams(int tournamentId)
         {
@@ -264,6 +272,18 @@
                 .Find(tournamentId)
                 .Games
                 .Count();
+        }
+
+        private IQueryable<Tournament> Upcoming(bool upcoming)
+        {
+            var tournaments = this.db.Tournaments.AsQueryable();
+
+            if (upcoming)
+            {
+                tournaments = tournaments.Where(t => t.EndDate > DateTime.UtcNow);
+            }
+
+            return tournaments;
         }
     }
 }

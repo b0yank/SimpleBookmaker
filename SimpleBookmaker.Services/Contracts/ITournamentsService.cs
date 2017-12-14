@@ -18,7 +18,9 @@
 
         bool Exists(int tournamentId);
 
-        IEnumerable<TournamentListModel> All();
+        int Count(bool upcoming = false);
+
+        IEnumerable<TournamentListModel> All(bool upcoming  = false);
 
         IEnumerable<TournamentListModel> AllImportant(int count, bool upcoming = true);
 
@@ -26,7 +28,9 @@
 
         IEnumerable<TournamentListModel> WithoutTeam(int teamId);
 
-        IEnumerable<TournamentDetailedListModel> AllDetailed();
+        IEnumerable<TournamentDetailedListModel> AllDetailed(bool upcoming = false);
+
+        IEnumerable<TournamentDetailedListModel> AllDetailed(int page = 1, int pageSize = 10, bool upcoming = false);
 
         IEnumerable<BaseTeamModel> GetTeams(int tournamentId);
 

@@ -1,8 +1,10 @@
 ﻿namespace SimpleBookmaker.Services
 {
+    using AutoMapper.QueryableExtensions;
     using Data;
     using Data.Core.Enums;
     using Data.Models.Coefficients;
+    using Services.Models.Game;
     using System.Linq;
 
     public abstract class Service
@@ -25,6 +27,13 @@
 
         protected virtual bool PlayerExists(int playerId)
             => this.db.Players.Find(playerId) != null;
+
+        protected virtual GameTeamsModel GetTeams(int gameId)
+            => this.db.Games
+                .Where(g => g.Id == gameId)
+                .ProjectTo<GameTeamsModel>()
+                .FirstOrDefault();
+
 
         protected string GetTournamentBetSubjectName(TournamentBetCoefficient tbc)
         {

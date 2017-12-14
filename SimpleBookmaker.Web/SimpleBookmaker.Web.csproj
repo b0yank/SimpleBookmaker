@@ -19,10 +19,12 @@
     <Compile Remove="Infrastructure\Filters\RestoreModelStateFromTempDataAttribute.cs" />
     <Compile Remove="Infrastructure\Filters\SetTempDataModelStateAttribute.cs" />
     <Compile Remove="Models\BetViewModels\BetAddModel.cs" />
+    <Compile Remove="Models\BetViewModels\BetUnconfirmedModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="Areas\Admin\Views\Shared\_DatePickerPartial.cshtml" />
+    <Content Remove="Views\Shared\_GameCoefficientPartial.cshtml" />
   </ItemGroup>
 
 

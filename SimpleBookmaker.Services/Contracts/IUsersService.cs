@@ -9,5 +9,9 @@
         Task<IEnumerable<UserListModel>> AllAsync(int page = 1, int pageSize = 20, string keyword = null);
 
         int Count(string keyword = null);
+
+        UserProfileModel Profile(string username);
+
+        decimal GetBalance(string username);
     }
 }

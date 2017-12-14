@@ -20,6 +20,8 @@
 
         int UpcomingCount(int tournamentId);
 
-        GameTeamsModel GetTeams(int gameId);
+        GameTeamsModel GetGameTeams(int gameId);
+
+        DateTime? GetGametime(int gameId);
     }
 }

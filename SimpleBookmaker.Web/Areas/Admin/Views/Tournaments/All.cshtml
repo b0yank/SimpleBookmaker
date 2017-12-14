@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TournamentDetailedListModel>
+﻿@model TournamentDetailedListPageModel
 
 @{
     ViewData["Title"] = "All Tournaments";
@@ -22,7 +22,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var tournament in Model)
+        @foreach (var tournament in Model.Tournaments)
         {
             <tr>
                 <td>@tournament.Name</td>
@@ -41,4 +41,6 @@
         }
     </tbody>
 </table>
+
+@await  Html.PartialAsync("_PageNavigation", Model)
 

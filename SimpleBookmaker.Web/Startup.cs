@@ -3,13 +3,14 @@
     using AutoMapper;
     using Data;
     using Data.Models;
+    using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using SimpleBookmaker.Web.Infrastructure.Extensions;
     using System;
 
     public class Startup
@@ -46,7 +47,8 @@
 
             services.AddAutoMapper();
 
-            services.AddMvc();
+            services.AddMvc(options => options.Filters
+                .Add<AutoValidateAntiforgeryTokenAttribute>());
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
