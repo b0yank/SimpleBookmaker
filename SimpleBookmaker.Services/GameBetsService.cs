@@ -276,29 +276,51 @@
             this.db.SaveChanges();
         }
 
-        public void RemoveCoefficient(int coefficientId, BetType betType)
+        public bool RemoveCoefficient(int coefficientId, BetType betType)
         {
             switch (betType)
             {
                 case BetType.Game:
                     var gameCoefficient = this.db.GameBetCoefficients.Find(coefficientId);
 
-                    if (gameCoefficient != null)
+                    if (gameCoefficient == null)
                     {
-                        this.db.Remove(gameCoefficient);
+                        return false;
                     }
+
+                    if (this.db.GameBets
+                        .Any(gb => gb.GameBetCoefficientId == coefficientId
+                            && !gb.IsEvaluated))
+                    {
+                        return false;
+                    }
+
+                    this.db.Remove(gameCoefficient);
                     break;
-                case BetType.PlayerGame:
+
+                    case BetType.PlayerGame:
                     var playerGameCoefficient = this.db.PlayerGameBetCoefficients.Find(coefficientId);
 
-                    if (playerGameCoefficient != null)
+                    if (playerGameCoefficient == null)
                     {
-                        this.db.Remove(playerGameCoefficient);
+                        return false;
                     }
+
+                    if (this.db.PlayerGameBets
+                        .Any(pgb => pgb.PlayerGameBetCoefficientId == coefficientId
+                            && !pgb.IsEvaluated))
+                    {
+                        return false;
+                    }
+
+                    this.db.Remove(playerGameCoefficient);
+
                     break;
             }
 
             this.db.SaveChanges();
+
+            return true;
         }
     }
 }

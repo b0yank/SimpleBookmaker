@@ -1,0 +1,46 @@
+﻿@model IEnumerable<UserCurrentBetSlipModel>
+
+@{
+    ViewData["Title"] = "Current Bets";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@foreach (var betSlip in Model)
+{
+    var coefficientSum = betSlip.Bets.Sum(b => b.Coefficient);
+
+    <div class="ticketBox">
+        <div class="row">
+            <div class="col-xs-12 text-success">
+                Amount: $@betSlip.Amount.ToString("F2")
+            </div>
+        </div>
+
+        <div class="ticket-description">
+            @foreach (var bet in betSlip.Bets)
+            {
+                <div class="row">
+                    <div class="col-xs-4">@bet.BetCondition</div>
+                    <div class="col-xs-4">@bet.EventName</div>
+                    <div class="col-xs-2">@bet.EventDate.ToShortDateString()</div>
+                    <div class="col-xs-2">@bet.Coefficient.ToString("F2")</div>
+                </div>
+
+                <hr />
+            }
+
+            <div class="row">
+                <div class="col-xs-7"></div>
+                <div class="col-xs-3">Total coefficient:</div>
+                <div class="col-xs-2">@coefficientSum.ToString("F2")</div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-xs-7"></div>
+                <div class="col-xs-3">Potential earnings:</div>
+                <div class="col-xs-2 text-success">$@((coefficientSum * betSlip.Amount).ToString("F2"))</div>
+            </div>
+        </div>
+    </div>
+}

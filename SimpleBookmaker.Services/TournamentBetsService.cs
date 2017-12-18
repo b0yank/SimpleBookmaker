@@ -108,14 +108,27 @@
             this.db.SaveChanges();
         }
 
-        public void RemoveCoefficient(int coefficientId)
+        public bool RemoveCoefficient(int coefficientId)
         {
-            var tournamentCoefficient = this.db.TournamentBetCoefficients.Find(coefficientId);
+            var tournamentCoefficient = this.db.TournamentBetCoefficients
+                .Find(coefficientId);
 
-            if (tournamentCoefficient != null)
+            if (tournamentCoefficient == null)
             {
-                this.db.Remove(tournamentCoefficient);
+                return false;
             }
+
+            if (this.db.TournamentBets
+                    .Any(tb => tb.BetCoefficientId == coefficientId
+                        && !tb.IsEvaluated))
+            {
+                return false;
+            }
+
+            this.db.Remove(tournamentCoefficient);
+            this.db.SaveChanges();
+
+            return true;
         }
     }
 }

@@ -9,6 +9,8 @@
 
         bool Exists(int id);
 
+        bool Remove(int id);
+
         int Count(string keyword);
 
         string GetName(int id);

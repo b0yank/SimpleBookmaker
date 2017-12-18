@@ -6,8 +6,6 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<a asp-controller="Players" asp-action="All" asp-route-teamId="@Model.Id" class="btn btn-primary">Go to players</a>
-
 <div class="container">
     <div class="col-sm-4">
         <h4>Competing In:</h4>
@@ -54,16 +52,18 @@
                 </div>
 
                 <input type="submit" value="Add" class="btn btn-success" />
+                <a asp-action="All" class="btn btn-default">Back to list</a>
             </form>
         }
         else
         {
             <h4>This team is already competing in all available competitions.</h4>
         }
-
-        <div style="padding-top: 1em;">
-            <a asp-action="All" class="btn btn-default">Back to list</a>
-        </div>
     </div>
+    <div class="col-sm-4"></div>
+</div>
+
+<div class="container">
+    <a asp-controller="Players" asp-action="All" asp-route-teamId="@Model.Id" class="btn btn-primary">Go to players</a>
 </div>
 

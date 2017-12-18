@@ -7,26 +7,27 @@
 <h2>@ViewData["Title"]</h2>
 
 <p class="lead">
-    <span class="text-info">@Model.Tournament</span> game between <span class="text-info">@Model.HomeTeam</span> and <span class="text-info">@Model.AwayTeam</span> - played on @Model.Kickoff.ToShortDateString()
+    <span class="text-danger">@Model.Tournament</span> game between <span class="text-danger">@Model.HomeTeam</span> and <span class="text-danger">@Model.AwayTeam</span> - played on @Model.Kickoff.ToShortDateString()
 </p>
 
 <div asp-validation-summary="All" class="text-danger"></div>
 
 <form asp-action="SetStats" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
 
     <table class="table column-centered">
         <colgroup>
             <col span="1" style="width: 10%" />
-            <col span="1" style="width: 15%" />
-            <col span="1" style="width: 15%" />
-            <col span="1" style="width: 60%" />
+            <col span="1" style="width: 20%" />
+            <col span="1" style="width: 20%" />
+            <col span="1" style="width: 50%" />
         </colgroup>
 
         <thead>
             <tr>
                 <th class="lead">Stat</th>
-                <th class="lead">Home</th>
-                <th class="lead">Away</th>
+                <th class="lead">@Model.HomeTeam</th>
+                <th class="lead">@Model.AwayTeam</th>
                 <th></th>
             </tr>
         </thead>
@@ -109,10 +110,10 @@
                 </select>
             </div>
 
-            <button class="btn btn-success" type="button" onclick="addHomeScorer()">Add Home Goalscorer</button>
+            <button class="btn" type="button" onclick="addHomeScorer()">Add Home Goalscorer</button>
         </div>
 
-        <div class="col-sm-6 col-md-2">
+        <div class="col-sm-6 col-md-2" style="margin-left: 50px">
             <div class="form-group">
                 <select id="awayPlayersDropdown" class="form-control">
                     <option value="0">Own goal</option>
@@ -123,7 +124,7 @@
                 </select>
             </div>
 
-            <button class="btn btn-success" type="button" onclick="addAwayScorer()">Add Away Goalscorer</button>
+            <button class="btn" type="button" onclick="addAwayScorer()">Add Away Goalscorer</button>
         </div>
     </div>
 </form>

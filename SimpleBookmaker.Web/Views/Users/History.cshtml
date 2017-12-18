@@ -1,0 +1,32 @@
+﻿@model UserHistoryPageModel
+
+@{
+    ViewData["Title"] = "Your History";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@foreach (var betSlip in Model.BetSlips)
+{
+    var successClass = betSlip.IsSuccess ? "alert-success" : "alert-danger";
+    var successContent = betSlip.IsSuccess ? "SUCCEEDED" : "FAILED";
+
+    <div class="ticketBox">
+        <div class="row">Amount: $@betSlip.Amount</div>
+        <div class="row"><span class="@successClass lead">@successContent</span></div>
+
+        <div class="ticket-description">
+            @foreach (var bet in betSlip.Bets)
+            {
+                <div class="row">
+                    <div class="col-xs-5">@bet.Bet</div>
+                    <div class="col-xs-4">@bet.EventName</div>
+                    <div class="col-xs-2">@bet.Date.ToShortDateString()</div>
+                    <div class="col-xs-1">@bet.Coefficient.ToString("F2")</div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@await Html.PartialAsync("_PageNavigation", Model)

@@ -13,7 +13,7 @@
             {
                 return gameStats.HomeGoalscorers.Count() > gameStats.AwayGoalscorers.Count();
             }
-            else if (betSide == BetSide.Away)
+            else if (betSide == BetSide.Neutral)
             {
                 return gameStats.HomeGoalscorers.Count() == gameStats.AwayGoalscorers.Count();
             }

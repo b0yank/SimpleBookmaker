@@ -7,6 +7,7 @@
     using Models.Tournament;
     using Services.Contracts;
     using Services.Infrastructure.BetDescribers;
+    using System;
     using Web.Infrastructure;
 
     public class TournamentsController : BookmakerBaseController
@@ -44,7 +45,7 @@
 
             var existingCoefficients = this.tournamentBets.ExistingTournamentCoefficients(tournamentId);
             var possibleCoefficients = this.tournamentBets.PossibleTournamentCoefficients();
-            var teams = this.tournaments.GetTeams(tournamentId);
+            var teams = this.tournaments.GetTournamentTeams(tournamentId);
 
             var viewModel = new SetTournamentCoefficientsModel
             {
@@ -87,15 +88,40 @@
 
                 if (!success)
                 {
-                    ModelState.AddModelError("", "A coefficient already exists for this condition");
+                    ModelState.AddModelError("CoefficientExists", "A coefficient already exists for this condition");
                 }
             }
 
             return RedirectToAction(nameof(SetBets), new { tournamentId = model.TournamentId });
         }
 
+        [SetTempDataModelErrors]
         public IActionResult ChoosePlayer(int subjectId, int tournamentId, double coefficient, TournamentBetType betType)
         {
+            if (!this.teams.Exists(subjectId))
+            {
+                return NotFound(ErrorMessages.InvalidTeam);
+            }
+
+            if (!this.tournaments.Exists(tournamentId))
+            {
+                return NotFound(ErrorMessages.InvalidTournament);
+            }
+
+            if (!Enum.IsDefined(typeof(TournamentBetType), betType))
+            {
+                return NotFound(ErrorMessages.InvalidBetType);
+            }
+
+            if (coefficient <= 0)
+            {
+                ModelState.Clear();
+
+                ModelState.AddModelError("coefficient", ErrorMessages.InvalidCoefficientValue);
+
+                return RedirectToAction(nameof(SetBets), new { tournamentId = tournamentId });
+            }
+
             var teamPlayers = this.players.ByTeam(subjectId);
             var team = this.teams.GetName(subjectId);
             var tournament = this.tournaments.GetName(tournamentId);
@@ -128,9 +154,15 @@
         }
 
         [HttpPost]
+        [SetTempDataModelErrors]
         public IActionResult RemoveCoefficient(RemoveCoefficientModel model)
         {
-            this.tournamentBets.RemoveCoefficient(model.CoefficientId);
+            var success = this.tournamentBets.RemoveCoefficient(model.CoefficientId);
+
+            if (!success)
+            {
+                ModelState.AddModelError("", ErrorMessages.CoefficientDeleteFailed);
+            }
 
             return RedirectToAction(nameof(SetBets), new { tournamentId = model.SubjectId });
         }

@@ -12,9 +12,10 @@ using System;
 namespace SimpleBookmaker.Data.Migrations
 {
     [DbContext(typeof(SimpleBookmakerDbContext))]
-    partial class SimpleBookmakerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171216154733_BetHistoryUpdated")]
+    partial class BetHistoryUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

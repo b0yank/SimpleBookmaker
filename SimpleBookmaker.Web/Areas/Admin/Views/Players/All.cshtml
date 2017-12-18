@@ -8,6 +8,9 @@
 
 <a asp-action="AddToTeam" asp-route-teamId="@Model.TeamId" class="btn btn-primary">Add Players to @Model.Team</a>
 <a asp-controller="Teams" asp-action="All" class="btn btn-default">Back to teams</a>
+<a asp-action="Remove" asp-route-returnUrl="@($"{Context.Request.Path}?teamId={Model.TeamId}")" class="btn btn-danger">Remove Players From Database</a>
+
+<div asp-validation-summary="All" class="alert-danger"></div>
 
 <table class="table">
     <thead>

@@ -1,6 +1,7 @@
 ﻿namespace SimpleBookmaker.Web.Areas.Admin.Controllers
 {
     using Infrastructure;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Tournament;
     using Services.Contracts;
@@ -20,6 +21,7 @@
             this.tournaments = tournaments;
         }
         
+        [RestoreModelErrorsFromTempData]
         public IActionResult All(int page = 1)
         {
             var allTournaments = this.tournaments.AllDetailed(page, tournamentListPageSize);
@@ -122,6 +124,7 @@
         }
 
         [HttpPost]
+        [SetTempDataModelErrors]
         public IActionResult Remove(TournamentRemoveModel model)
         {
             if (!this.tournaments.Exists(model.Id))
@@ -133,7 +136,7 @@
 
             if (!success)
             {
-                return NotFound(ErrorMessages.TournamentRemoveFailed);
+                ModelState.AddModelError("", ErrorMessages.TournamentRemoveFailed);
             }
 
             return RedirectToAction(nameof(All));
@@ -165,6 +168,7 @@
             return RedirectToAction(nameof(All));
         }
         
+        [RestoreModelErrorsFromTempData]
         public IActionResult Games(int tournamentId, int page = 1)
         {
             var tournament = this.tournaments.GetName(tournamentId);

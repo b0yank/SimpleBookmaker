@@ -19,6 +19,6 @@
 
         bool AddToTeam(int playerId, int teamId);
 
-        void Remove(int playerId);
+        bool Remove(int playerId);
     }
 }

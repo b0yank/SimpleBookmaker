@@ -1,11 +1,12 @@
 ﻿namespace SimpleBookmaker.Web.Areas.Admin.Controllers
 {
+    using Infrastructure;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Player;
+    using Newtonsoft.Json;
     using Services.Contracts;
-    using SimpleBookmaker.Services.Models.Player;
-    using SimpleBookmaker.Web.Infrastructure;
-    
+
     public class PlayersController : AdminBaseController
     {
         private readonly IPlayersService players;
@@ -17,6 +18,7 @@
             this.teams = teams;
         }
         
+        [RestoreModelErrorsFromTempData]
         public IActionResult All(int teamId)
         {
             var teamPlayers = this.players.ByTeam(teamId);
@@ -69,17 +71,26 @@
             return RedirectToAction(nameof(All), new { teamId = model.TeamId });
         }
 
-        public IActionResult Remove()
+        [RestoreModelErrorsFromTempData]
+        public IActionResult Remove(string returnUrl = null)
         {
             var unassignedPlayers = this.players.Unassigned();
+
+            ViewData["returnUrl"] = returnUrl ?? "admin/teams/all";
 
             return View(unassignedPlayers);
         }
 
         [HttpPost]
+        [SetTempDataModelErrors]
         public IActionResult Remove(int playerId)
         {
-            this.players.Remove(playerId);
+            var success = this.players.Remove(playerId);
+
+            if (!success)
+            {
+                ModelState.AddModelError("", ErrorMessages.PlayerRemoveFailed);
+            }
 
             return RedirectToAction(nameof(Remove));
         }
@@ -119,13 +130,14 @@
         }
 
         [HttpPost]
+        [SetTempDataModelErrors]
         public IActionResult RemoveFromTeam(PlayerEditTeamModel model)
         {
             var success = this.players.RemoveFromTeam(model.PlayerId);
 
             if (!success)
             {
-                return NotFound(ErrorMessages.InvalidPlayer);
+                ModelState.AddModelError("", ErrorMessages.PlayerRemoveFailed);
             }
 
             return RedirectToAction(nameof(All), new { teamId = model.TeamId });

@@ -8,7 +8,7 @@
     {
         bool Add(int tournamentId, int homeTeamId, int awayTeamId, DateTime time);
 
-        void Remove(int gameId);
+        bool Remove(int gameId);
 
         void Edit(int gameId, DateTime kickoff);
 

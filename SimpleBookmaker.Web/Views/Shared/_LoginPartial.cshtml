@@ -4,23 +4,72 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
-@if (SignInManager.IsSignedIn(User))
-{
-    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right loginForm">
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-            </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
-            </li>
-        </ul>
-    </form>
+@{
+    var action = ViewContext.RouteData.Values["Action"].ToString();
+    var controller = ViewContext.RouteData.Values["Controller"].ToString();
 }
-else
-{
-    <ul class="nav navbar-nav navbar-right loginForm">
-        <li><a asp-area="" asp-controller="Account" asp-action="Register" class="btn btn-link navbar-btn navbar-link" style="margin-right: 10px">Register</a></li>
-        <li><a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-link navbar-btn navbar-link">Log in</a></li>
+
+<form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right loginForm">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="@(controller == "Home" ? (action  == "Index" ? "active" : "") : "")">
+            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            if (User.IsInRole(Roles.Administrator))
+            {
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        Admin
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-area="Admin" asp-controller="Tournaments" asp-action="All">Tournaments</a></li>
+                        <li><a asp-area="Admin" asp-controller="Games" asp-action="ChooseTournament">Games</a></li>
+                        <li><a asp-area="Admin" asp-controller="Teams" asp-action="All">Teams</a></li>
+                        <li><a asp-area="Admin" asp-controller="Users" asp-action="All">Users</a></li>
+                    </ul>
+                </li>
+            }
+            if (User.IsInRole(Roles.Bookmaker))
+            {
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        Bookie
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-area="Bookmaker" asp-controller="Tournaments" asp-action="Index">Tournaments</a></li>
+                        <li><a asp-area="Bookmaker" asp-controller="Games" asp-action="All">Games</a></li>
+                    </ul>
+                </li>
+            }
+            if (User.IsInRole(Roles.Statistician))
+            {
+                <li role="presentation" class="@(controller == "Statistician" ? (action  == "Index" ? "active" : "") : "")">
+                    <a asp-area="" asp-controller="Statistician" asp-action="Index">Stats</a>
+                </li>
+            }
+
+            <li role="presentation" class="@(controller == "Tournaments" ? (action  == "All" ? "active" : "") : "")">
+                <a asp-area="" asp-controller="Tournaments" asp-action="All">Tournaments</a>
+            </li>
+            <li role="presentation" class="@(controller == "Users" ? (action  == "Profile" ? "active" : "") : "")">
+                <a asp-area="" asp-controller="Users" asp-action="Profile" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+            </li>
+            <li>
+                <button type="submit" class="btn btn-link navbar-btn navbar-link" style="margin-top: -5px">Log out</button>
+            </li>
+        }
+        else
+        {
+            <li role="presentation" class="@(controller == "Account" ? (action  == "Register" ? "active" : "") : "")">
+                <a asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+            </li>
+            <li role="presentation" class="@(controller == "Account" ? (action  == "Login" ? "active" : "") : "")">
+                <a asp-area="" asp-controller="Account" asp-action="Login">Log in</a>
+            </li>
+        }
     </ul>
-}
+</form>

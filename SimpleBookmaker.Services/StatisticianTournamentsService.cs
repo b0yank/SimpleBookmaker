@@ -3,7 +3,7 @@
     using AutoMapper.QueryableExtensions;
     using Contracts;
     using Data;
-    using Data.Models.Bets;
+    using Data.Models.BetSlips;
     using Infrastructure.BetDescribers;
     using Infrastructure.EventStats;
     using Services.BetResolvers.Contracts;
@@ -47,7 +47,16 @@
         public bool ResolveBets(int tournamentId, int championId)
         {
             this.ResolveTournamentBets(tournamentId, championId);
-            return this.RemoveTournament(tournamentId);
+
+            var resolvedBetSlips = this.db.TournamentBetSlips
+                .Where(tbs => tbs.Bets.All(b => b.IsEvaluated))
+                .ToList();
+
+            this.AddBetSlipsToHistory(resolvedBetSlips);
+
+            this.PayUsers();
+
+            return RemoveTournament(tournamentId);
         }
 
         private void ResolveTournamentBets(int tournamentId, int championId)
@@ -62,6 +71,7 @@
             };
 
             var bets = this.db.TournamentBets
+                .Include(b => b.BetCoefficient)
                 .Where(tb => tb.BetCoefficient.TournamentId == tournamentStats.TournamentId);
 
             foreach (var bet in bets)
@@ -73,36 +83,68 @@
             }
 
             this.db.SaveChanges();
+        }
 
-            foreach (var bet in bets)
+        private void AddBetSlipsToHistory(IEnumerable<TournamentBetSlip> betSlips)
+        {
+            foreach (var betSlip in betSlips)
             {
-                var betSlip = this.db.TournamentBetSlips.Include(bs => bs.Bets).First(bs => bs.Id == bet.BetSlipId);
-
-                if (betSlip.Bets.All(b => b.IsEvaluated))
-                {
-                    if (betSlip.Bets.All(b => b.IsSuccess))
+                var tournamentBets = this.db.TournamentBets
+                    .Where(tb => tb.BetSlipId == betSlip.Id)
+                    .Select(tb => new
                     {
-                        this.PayUser(betSlip, betSlip.Bets);
-                    }
+                        BetCoefficient = tb.BetCoefficient,
+                        Coefficient = tb.Coefficient,
+                        IsSuccess = tb.IsSuccess,
+                        EventName = tb.BetCoefficient.Tournament.Name,
+                        TournamentEndDate = tb.BetCoefficient.Tournament.EndDate
+                    });
 
-                    var betsWithDescription = betSlip
-                        .Bets
-                        .ToDictionary(b => (Bet)b,
-                            b => TournamentBetDescriber.Describe(b.BetCoefficient.BetType,
-                                this.GetTournamentBetSubjectName(b.BetCoefficient)));
+                var bets = tournamentBets
+                    .Select(tb => new BetHistoryModel
+                    {
+                        Coefficient = tb.Coefficient,
+                        EventName = tb.EventName,
+                        Date = tb.TournamentEndDate,
+                        BetCondition = TournamentBetDescriber.Describe(tb.BetCoefficient.BetType,
+                            this.GetTournamentBetSubjectName(tb.BetCoefficient))
+                    });
 
-                    this.MoveBetsToHistory(betSlip, betsWithDescription);
-                }
+                AddBetsToHistory(betSlip.Amount,
+                    betSlip.UserId,
+                    tournamentBets.All(tb => tb.IsSuccess),
+                    bets);
             }
+
+            this.db.SaveChanges();
+        }
+
+        private void PayUsers()
+        {
+            var betSlips = this.db.TournamentBetSlips
+                .Where(tbs => tbs.Bets.All(tb => tb.IsSuccess))
+                .Select(bs => new
+                {
+                    Amount = bs.Amount,
+                    UserId = bs.UserId,
+                    Coefficients = bs.Bets.Select(gb => gb.Coefficient)
+                });
+
+            foreach (var betSlip in betSlips)
+            {
+                PayUser(betSlip.Amount, betSlip.UserId, betSlip.Coefficients);
+            }
+
+            this.db.SaveChanges();
         }
 
         private IEnumerable<int> FindTopScorers(int tournamentId)
         {
-            var tournament = this.db.Tournaments.Find(tournamentId);
+            var tournamentPlayers = this.db.TournamentPlayers.Where(tp => tp.TournamentId == tournamentId);
 
-            var topScorerTally = tournament.Players.Max(p => p.GoalsScored);
+            var topScorerTally = tournamentPlayers.Max(p => p.GoalsScored);
 
-            return tournament.Players
+            return tournamentPlayers
                 .Where(p => p.GoalsScored == topScorerTally)
                 .Select(p => p.Player.Id);
         }

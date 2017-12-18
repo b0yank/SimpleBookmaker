@@ -32,7 +32,7 @@
 
         IEnumerable<TournamentDetailedListModel> AllDetailed(int page = 1, int pageSize = 10, bool upcoming = false);
 
-        IEnumerable<BaseTeamModel> GetTeams(int tournamentId);
+        IEnumerable<BaseTeamModel> GetTournamentTeams(int tournamentId);
 
         IEnumerable<BaseTeamModel> GetAvailableTeams(int tournamentId);
 

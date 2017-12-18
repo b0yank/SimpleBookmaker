@@ -18,7 +18,7 @@
         @foreach (var tournament in Model.Tournaments)
         {
             <div class="row">
-                <div class="col-xs-6"><a asp-action="View">@tournament.Name</a></div>
+                <div class="col-xs-6"><a asp-action="View" asp-route-id="@tournament.Id">@tournament.Name</a></div>
                 <div class="col-xs-2">@tournament.StartDate.ToShortDateString()</div>
                 <div class="col-xs-2">@tournament.EndDate.ToShortDateString()</div>
                 <div class="col-xs-2">@tournament.Teams</div>

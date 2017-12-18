@@ -8,8 +8,10 @@
 
 <h4>Choose the unassigned player you wish to remove:</h4>
 
+<div asp-validation-summary="All" class="alert-danger"></div>
+
 <form asp-action="Remove" method="post">
-    <div class="col-sm-5">
+    <div class="col-sm-4">
         <div class="form-group">
             <select name="PlayerId" asp-items="@Model.Select(p => new SelectListItem { Text = p.Name, Value = p.Id.ToString() })"
                     class="form-control"></select>
@@ -17,4 +19,5 @@
     </div>
 
     <input type="submit" value="Remove Player" class="btn btn-danger" />
+    <a href="@ViewData["returnUrl"]" class="btn btn-default">Back</a>
 </form>

@@ -17,6 +17,6 @@
 
         void EditCoefficient(int coefficientId, double newCoefficient);
 
-        void RemoveCoefficient(int coefficientId);
+        bool RemoveCoefficient(int coefficientId);
     }
 }

@@ -1,0 +1,14 @@
+﻿@model BaseTeamModel
+
+@{
+    ViewData["Title"] = "Remove Team";
+}
+
+<h4>Are you sure you wish to delete <span class="text-danger">@Model.Name</span> from the database?</h4>
+<h4>In order to remove the team, all user bets which are connected with it <strong>must</strong> be resolved!</h4>
+
+<form asp-action="Destroy" method="post">
+    <input type="hidden" name="TeamId" value="@Model.Id" />
+    <input type="submit" class="btn btn-danger" value="Confirm" />
+</form>
+

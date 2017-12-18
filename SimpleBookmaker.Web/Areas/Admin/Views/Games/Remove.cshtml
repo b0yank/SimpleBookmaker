@@ -7,10 +7,12 @@
 <h2>@ViewData["Title"]</h2>
 
 <h4>Are you sure you wish to remove the game between <b class="text-danger">@Model.HomeTeam</b> and <b class="text-danger">@Model.AwayTeam</b> on @Model.Kickoff.ToShortDateString()?</h4>
+<h4>In order to remove the game, all bets placed on it <strong>must</strong> have been resolved!</h4>
 
 <form asp-action="Remove"method="post">
     <input type="hidden" name="Id" value="@Model.Id" />
     <input type="hidden" name="TournamentId" value="@Model.TournamentId" />
 
     <input type="submit" value="Confirm" class="btn btn-primary" />
+    <a asp-controller="Tournaments" asp-action="Games" asp-route-tournamentId="@Model.TournamentId" class="btn btn-default">Tournament Games</a>
 </form>

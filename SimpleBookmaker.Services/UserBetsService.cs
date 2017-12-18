@@ -4,20 +4,92 @@
     using Contracts;
     using Data;
     using Data.Core.Enums;
+    using Data.Models;
     using Data.Models.Bets;
     using Data.Models.BetSlips;
+    using Microsoft.AspNetCore.Identity;
     using SimpleBookmaker.Services.Models.UserCoefficient;
+    using Services.Infrastructure.BetDescribers;
     using System.Collections.Generic;
     using System.Linq;
     using SimpleBookmaker.Services.Models.Bet;
-    using Microsoft.EntityFrameworkCore;
-    using SimpleBookmaker.Data.Models.Coefficients;
+    using System.Threading.Tasks;
 
     public class UserBetsService : Service, IUserBetsService
     {
-        public UserBetsService(SimpleBookmakerDbContext db)
+        private readonly UserManager<User> userManager;
+
+        public UserBetsService(SimpleBookmakerDbContext db, UserManager<User> userManager)
             : base(db)
         {
+            this.userManager = userManager;
+        }
+        
+        public async Task<IEnumerable<UserCurrentBetSlipModel>> CurrentBets(string username)
+        {
+            var userId = (await this.userManager.FindByNameAsync(username)).Id;
+
+            var currentBetSlips = new List<UserCurrentBetSlipModel>();
+
+            var gameBetSlips = this.db.GameBetSlips.Where(gbs => gbs.UserId == userId);
+
+            foreach (var betSlip in gameBetSlips)
+            {
+                var currentBetSlip = new UserCurrentBetSlipModel
+                {
+                    Amount = betSlip.Amount
+                };
+
+                currentBetSlip.Bets = this.db.GameBets
+                    .Where(gb => gb.BetSlipId == betSlip.Id)
+                    .ProjectTo<UserCurrentBetModel>()
+                    .Union(this.db.PlayerGameBets
+                        .Where(pgb => pgb.BetSlipId == betSlip.Id)
+                        .ProjectTo<UserCurrentBetModel>());
+
+
+                currentBetSlips.Add(currentBetSlip);
+            }
+
+            var tournamentBetSlips = this.db.TournamentBetSlips.Where(tbs => tbs.UserId == userId);
+
+            var tournamentIds = tournamentBetSlips
+                .SelectMany(t => t.Bets.Select(tb => tb.BetCoefficient.TournamentId))
+                .Distinct();
+
+            var tournamentBetCoefficients = this.db.TournamentBetCoefficients
+                .Where(tbc => tournamentIds
+                    .Contains(tbc.TournamentId));
+
+            var subjectNames = new Dictionary<int, string>();
+            foreach (var tournamentBetCoefficient in tournamentBetCoefficients)
+            {
+                subjectNames.Add(tournamentBetCoefficient.Id, this.GetTournamentBetSubjectName(tournamentBetCoefficient));
+            }
+
+            foreach (var betSlip in tournamentBetSlips)
+            {
+                var currentBetSlip = new UserCurrentBetSlipModel
+                {
+                    Amount = betSlip.Amount
+                };
+
+                currentBetSlip.Bets = this.db.TournamentBets
+                    .Where(bet => bet.BetSlipId == betSlip.Id)
+                    .Select(bet => new UserCurrentBetModel
+                    {
+                        Coefficient = bet.Coefficient,
+                        EventName = bet.BetCoefficient.Tournament.Name,
+                        EventDate = bet.BetCoefficient.Tournament.EndDate,
+                        BetCondition = TournamentBetDescriber.Describe(
+                            bet.BetCoefficient.BetType, 
+                            subjectNames[bet.BetCoefficient.Id])                        
+                    });
+
+                currentBetSlips.Add(currentBetSlip);
+            }
+
+            return currentBetSlips;
         }
 
         public IEnumerable<UserGameCoefficientModel> GameCoefficients(int gameId)
@@ -168,6 +240,28 @@
             }
 
             return false;
+        }
+
+        public async Task<IEnumerable<UserHistoryBetSlipModel>> UserHistory(string username, int page = 1, int pageSize = 5)
+        {
+            var userId = (await this.userManager.FindByNameAsync(username)).Id;
+
+            var userBetSlipHistories = this.db.BetSlipHistories
+                .Where(bsh => bsh.UserId == userId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ProjectTo<UserHistoryBetSlipModel>();
+
+            return userBetSlipHistories;
+        }
+
+        public async Task<int> UserHistoryCount(string username)
+        {
+            var userId = (await this.userManager.FindByNameAsync(username)).Id;
+
+            return this.db.BetSlipHistories
+                .Where(bsh => bsh.UserId == userId)
+                .Count(); 
         }
     }
 }

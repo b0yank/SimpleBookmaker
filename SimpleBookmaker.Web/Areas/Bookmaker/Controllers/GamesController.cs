@@ -175,9 +175,15 @@
         }
 
         [HttpPost]
+        [SetTempDataModelErrors]
         public IActionResult RemoveCoefficient(RemoveCoefficientModel model)
         {
-            this.gameBets.RemoveCoefficient(model.CoefficientId, BetType.Game);
+            var success = this.gameBets.RemoveCoefficient(model.CoefficientId, BetType.Game);
+
+            if (!success)
+            {
+                ModelState.AddModelError("", ErrorMessages.CoefficientDeleteFailed);
+            }
 
             return RedirectToAction(nameof(SetBets), new { gameId = model.SubjectId });
         }
@@ -195,9 +201,15 @@
         }
 
         [HttpPost]
+        [SetTempDataModelErrors]
         public IActionResult RemovePlayerCoefficient(RemoveCoefficientModel model)
         {
-            this.gameBets.RemoveCoefficient(model.CoefficientId, BetType.PlayerGame);
+            var success = this.gameBets.RemoveCoefficient(model.CoefficientId, BetType.PlayerGame);
+
+            if (!success)
+            {
+                ModelState.AddModelError("", ErrorMessages.CoefficientDeleteFailed);
+            }
 
             return RedirectToAction(nameof(SetPlayerBets), new { gameId = model.SubjectId });
         }

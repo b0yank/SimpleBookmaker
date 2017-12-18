@@ -14,6 +14,8 @@
             IEnumerable<int> homeGoalscorers,
             IEnumerable<int> awayGoalscorers)
         {
+            this.GameId = gameId;
+
             this.HomeCorners = homeCorners;
             this.AwayCorners = awayCorners;
 

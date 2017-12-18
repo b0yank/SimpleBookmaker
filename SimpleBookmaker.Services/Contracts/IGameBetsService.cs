@@ -30,7 +30,7 @@
 
         void EditCoefficient(int coefficientId, double newCoefficient, BetType betType);
 
-        void RemoveCoefficient(int coefficientId, BetType betType);
+        bool RemoveCoefficient(int coefficientId, BetType betType);
 
         bool HasBasicCoefficients(int gameId);
     }

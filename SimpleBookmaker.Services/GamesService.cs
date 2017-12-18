@@ -109,18 +109,31 @@
             return game.ProjectTo<GameDetailedModel>().First();
         }
 
-        public void Remove(int gameId)
+        public bool Remove(int gameId)
         {
             var game = this.db.Games.Find(gameId);
 
             if (game == null)
             {
-                return;
+                return false;
+            }
+
+            var hasGameBets = this.db.GameBets
+                .Any(gb => gb.BetCoefficient.GameId == gameId && !gb.IsEvaluated);
+
+            var hasPlayerBets = this.db.PlayerGameBets
+                .Any(pgb => pgb.BetCoefficient.GameId == gameId && !pgb.IsEvaluated);
+
+            if (hasGameBets || hasPlayerBets)
+            {
+                return false;
             }
 
             this.db.Games.Remove(game);
 
             this.db.SaveChanges();
+
+            return true;
         }
 
         public GameTeamsModel GetGameTeams(int gameId)

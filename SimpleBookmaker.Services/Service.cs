@@ -5,6 +5,7 @@
     using Data.Core.Enums;
     using Data.Models.Coefficients;
     using Services.Models.Game;
+    using System.Collections.Generic;
     using System.Linq;
 
     public abstract class Service
@@ -34,6 +35,10 @@
                 .ProjectTo<GameTeamsModel>()
                 .FirstOrDefault();
 
+        protected IEnumerable<TournamentBetCoefficient> GetTeamTournamentCoefficients(int teamId)
+            => this.db.TournamentBetCoefficients
+                .Where(tbc => tbc.BetType == TournamentBetType.Champion
+                    && tbc.BetSubjectId == teamId);
 
         protected string GetTournamentBetSubjectName(TournamentBetCoefficient tbc)
         {
@@ -45,26 +50,36 @@
             return this.db.Players.First(p => p.Id == tbc.BetSubjectId).Name;
         }
 
-        protected bool RemoveTournament(int tournamentId)
+        protected virtual bool RemoveTournament(int tournamentId)
         {
-            if (this.db.Games
-                .Any(g => g
-                    .TournamentId == tournamentId
+            var tournament = this.db.Tournaments.Find(tournamentId);
+
+            if (tournament == null)
+            {
+                return false;
+            }
+
+            bool hasGameBets = this.db.Games
+                .Any(g => 
+                    g.TournamentId == tournamentId
                     && ((g.GameCoefficients
                         .Any(gbc => gbc.GameBets
                             .Any(gb => !gb.IsEvaluated)))
-                        || (g.PlayerCoefficients.Any(pc => pc.Bets.Any(pcb => !pcb.IsEvaluated))))))
+                        || (g.PlayerCoefficients.Any(pc => pc.Bets.Any(pcb => !pcb.IsEvaluated)))));
+
+            if (hasGameBets)
+            {
+                return false;
+            }
+
+            if (this.db.TournamentBets
+                .Any(tb => tb.BetCoefficient.TournamentId == tournamentId && !tb.IsEvaluated))
             {
                 return false;
             }
 
             var games = this.db.Games.Where(g => g.TournamentId == tournamentId);
             this.db.Games.RemoveRange(games);
-
-            var tournamentBets = this.db.TournamentBets
-                .Where(tb => tb.BetCoefficient.TournamentId == tournamentId);
-
-            this.db.TournamentBets.RemoveRange(tournamentBets);
 
             var tournamentCoefficients = this.db.TournamentBetCoefficients
                 .Where(tbc => tbc.TournamentId == tournamentId);
@@ -76,8 +91,6 @@
 
             var tournamentPlayers = this.db.TournamentPlayers.Where(tp => tp.TournamentId == tournamentId);
             this.db.TournamentPlayers.RemoveRange(tournamentPlayers);
-
-            var tournament = this.db.Tournaments.Find(tournamentId);
 
             this.db.Tournaments.Remove(tournament);
 

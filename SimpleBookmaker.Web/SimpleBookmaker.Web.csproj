@@ -16,6 +16,7 @@
     <Compile Remove="Areas\Bookmaker\Models\CoefficientsModel.cs" />
     <Compile Remove="Areas\Bookmaker\Models\Game\GameCoefficientListModel.cs" />
     <Compile Remove="Areas\Bookmaker\Models\Game\RemovePlayerCoefficientModel.cs" />
+    <Compile Remove="Controllers\ErrorController.cs" />
     <Compile Remove="Infrastructure\Filters\RestoreModelStateFromTempDataAttribute.cs" />
     <Compile Remove="Infrastructure\Filters\SetTempDataModelStateAttribute.cs" />
     <Compile Remove="Models\BetViewModels\BetAddModel.cs" />

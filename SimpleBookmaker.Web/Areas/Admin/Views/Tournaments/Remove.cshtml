@@ -8,7 +8,7 @@
 
 <h4>Are you sure you want to delete <b>@Model.Name</b>?</h4>
 
-<h4>Any unresolved bets on this tournament <b class="text-danger">will also be deleted</b></h4>
+<h4>In order to successfully delete this tournament, there must be <b class="text-danger">no unresolved bets</b> related to it!</h4>
 
 <form asp-action="Remove" method="post">
     <input type="hidden" name="Id" value="@Model.Id" />

@@ -30,17 +30,14 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-
-
-
-
 <body>
 
     <div class="loader">
         <div>
-            <img src="images/icons/preloader.gif" />
+            <img src="~/images/icons/preloader.gif" />
         </div>
     </div>
 
@@ -48,28 +45,12 @@
         <div class="row">
             <div class="col-sm-3 left-wrapper">
                 <div class="event-banner-wrapper">
-                    <div class="logo">
-                        <h1>Stage</h1>
-                    </div>
-
-                    <h2>
-                        Music<br>Concert Live
-                        <span>10 April 2017, 8:00 PM</span>
-                    </h2>
-                    <p>created by <a href="http://www.pixpalette.com" target="_blank">pixpalette</a></p>
                 </div>
             </div>
             <div class="col-sm-9 right-wrapper">
                 <div class="event-ticket-wrapper">
 
                     <div class="event-tab">
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active">
-                                <a asp-area="" asp-controller="Home" asp-action="Index" aria-controls="buyTicket" role="tab" data-toggle="tab">Home</a>
-                            </li>
-                        </ul>
 
                         @await Html.PartialAsync("_LoginPartial")
 
@@ -79,11 +60,7 @@
                                 <div class="row">
                                     
                                     @RenderBody()
-                                    
-                                    @*<hr />
-                                    <footer>
-                                        <p>&copy; 2017 - SimpleBookmaker.Web</p>
-                                    </footer>*@
+
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="venue">
@@ -94,20 +71,6 @@
                                 <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h4>
                                 <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h4>
                                 <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cart">
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <p>
-                                    <span class="ticket-count">0</span> Tickets <span class="divider"></span> Total: Rs. <span class="total-amount">0</span>
-                                </p>
-                            </div>
-                            <div class="col-xs-6">
-                                <div class="text-right">
-                                    <a class="btn disabled" data-toggle="modal" data-target="#ticket-details">PROCEED</a>
-                                </div>
                             </div>
                         </div>
                     </div>

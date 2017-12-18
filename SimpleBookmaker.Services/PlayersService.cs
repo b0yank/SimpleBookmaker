@@ -3,18 +3,17 @@
     using AutoMapper.QueryableExtensions;
     using Contracts;
     using Data;
+    using Data.Core.Enums;
     using SimpleBookmaker.Data.Models;
     using SimpleBookmaker.Services.Models.Player;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class PlayersService : IPlayersService
+    public class PlayersService : Service, IPlayersService
     {
-        private readonly SimpleBookmakerDbContext db;
-
         public PlayersService(SimpleBookmakerDbContext db)
+            : base(db)
         {
-            this.db = db;
         }
 
         public IEnumerable<PlayerListModel> ByTeam(int teamId)
@@ -32,16 +31,39 @@
         public bool Exists(int playerId)
             => this.db.Players.Find(playerId) != null;
 
-        public void Remove(int playerId)
+        public bool Remove(int playerId)
         {
             var player = this.db.Players.Find(playerId);
 
-            if (player != null)
+            if (player == null)
             {
-                this.db.Players.Remove(player);
-
-                this.db.SaveChanges();
+                return false;
             }
+
+            var hasPlayerBets = this.db.PlayerGameBets
+                .Any(pgb => pgb.BetCoefficient.PlayerId == playerId
+                    && !pgb.IsEvaluated);
+
+            var hasTournamentBets = this.db.TournamentBets
+                .Any(tb => tb.BetCoefficient.BetType == TournamentBetType.TopScorer
+                    && tb.BetCoefficient.BetSubjectId == playerId);
+
+            if (hasPlayerBets || hasTournamentBets)
+            {
+                return false;
+            }
+
+            var playerCoefficients = this.db.PlayerGameBetCoefficients.Where(pbc => pbc.PlayerId == playerId);
+            this.db.PlayerGameBetCoefficients.RemoveRange(playerCoefficients);
+
+            var tournamentPlayers = this.db.TournamentPlayers.Where(tp => tp.PlayerId == playerId);
+            this.db.TournamentPlayers.RemoveRange(tournamentPlayers);
+
+            this.db.Players.Remove(player);
+
+            this.db.SaveChanges();
+
+            return true;
         }
 
         public void Create(string name, int age, int teamId)
@@ -52,6 +74,8 @@
                 Age = age,
                 TeamId = teamId
             };
+
+            this.AddPlayerToTeamTournaments(player, teamId);
 
             this.db.Players.Add(player);
             this.db.SaveChanges();
@@ -66,6 +90,8 @@
             {
                 return false;
             }
+
+            this.AddPlayerToTeamTournaments(player, teamId);
 
             player.TeamId = teamId;
             this.db.SaveChanges();
@@ -82,6 +108,15 @@
                 return false;
             }
 
+            if (this.db.PlayerGameBets.Any(pgb => pgb.BetCoefficient.PlayerId == playerId && !pgb.IsEvaluated))
+            {
+                return false;
+            }
+
+            var tournamentPlayers = this.db.TournamentPlayers.Where(tp => tp.PlayerId == playerId);
+
+            this.db.TournamentPlayers.RemoveRange(tournamentPlayers);
+
             player.TeamId = null;
             this.db.SaveChanges();
 
@@ -92,6 +127,23 @@
             => this.db.Players
                     .Where(p => p.TeamId == null)
                     .ProjectTo<PlayerListModel>();
-                
+
+        private void AddPlayerToTeamTournaments(Player player, int teamId)
+        {
+            var tournamentIds = this.db.TournamentsTeams
+                .Where(tt => tt.TeamId == teamId)
+                .Select(t => t.TournamentId);
+
+            foreach (var tournamentId in tournamentIds)
+            {
+                var tournamentPlayer = new TournamentPlayer
+                {
+                    Player = player,
+                    TournamentId = tournamentId
+                };
+
+                this.db.TournamentPlayers.Add(tournamentPlayer);
+            }
+        }       
     }
 }

@@ -1,9 +1,10 @@
 ﻿namespace SimpleBookmaker.Web.Areas.Admin.Controllers
 {
+    using Infrastructure;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Game;
     using Services.Contracts;
-    using SimpleBookmaker.Web.Infrastructure;
     using System;
     
     public class GamesController : AdminBaseController
@@ -82,9 +83,15 @@
         }
 
         [HttpPost]
+        [SetTempDataModelErrors]
         public IActionResult Remove(GameDestroyModel model)
         {
-            this.games.Remove(model.Id);
+            var success = this.games.Remove(model.Id);
+
+            if (!success)
+            {
+                ModelState.AddModelError("", "Game could not be removed - perhaps there are unresolved bets?");
+            }
 
             return RedirectToAction(nameof(TournamentsController.Games), "Tournaments" , new { tournamentId = model.TournamentId } );
         }

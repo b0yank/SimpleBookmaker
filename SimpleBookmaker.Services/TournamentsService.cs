@@ -94,16 +94,7 @@
         }
 
         public bool Remove(int tournamentId)
-        {
-            var tournament = this.db.Tournaments.Find(tournamentId);
-
-            if (tournament == null)
-            {
-                return false;
-            }
-
-            return RemoveTournament(tournamentId);
-        }
+            => RemoveTournament(tournamentId);
 
         public bool Exists(int tournamentId)
             => this.TournamentExists(tournamentId);
@@ -141,8 +132,12 @@
                 .ProjectTo<TournamentDetailedListModel>();
         }
 
-        public new IEnumerable<BaseTeamModel> GetTeams(int tournamentId)
-            => GetTeams(tournamentId);
+        public IEnumerable<BaseTeamModel> GetTournamentTeams(int tournamentId)
+            => this.db.TournamentsTeams
+                .Where(tt => tt.TournamentId == tournamentId)
+                .Select(tt => tt.Team)
+                .ProjectTo<BaseTeamModel>();
+
 
         public IEnumerable<BaseTeamModel> GetAvailableTeams(int tournamentId)
         {
@@ -214,6 +209,12 @@
 
             var tournamentTeam = this.db.TournamentsTeams
                 .FirstOrDefault(tt => tt.TeamId == teamId && tt.TournamentId == tournamentId);
+
+            var teamPlayerIds = this.db.Players.Where(p => p.TeamId == teamId).Select(p => p.Id);
+
+            var tournamentPlayers = this.db.TournamentPlayers.Where(tp => tp.TournamentId == tournamentId && teamPlayerIds.Contains(tp.PlayerId));
+
+            this.db.TournamentPlayers.RemoveRange(tournamentPlayers);
 
             if (tournamentTeam != null)
             {

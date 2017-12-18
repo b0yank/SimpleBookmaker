@@ -8,11 +8,15 @@
     using Models.UserViewModels;
     using Services.Contracts;
     using Services.Models.Bet;
+    using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     [Authorize]
     public class UsersController : BaseController
     {
+        private const int historyListPageSize = 5;
+
         private readonly IUserBetsService userBets;
         private readonly IUsersService users;
 
@@ -45,6 +49,13 @@
             return View(viewModel);
         }
 
+        public async Task<IActionResult> Current()
+        {
+            var currentBets = await this.userBets.CurrentBets(User.Identity.Name);
+
+            return View(currentBets);
+        }
+
         [SetTempDataModelErrors]
         [HttpPost]
         public IActionResult PlaceBets(double amount)
@@ -73,6 +84,23 @@
             SetBetSlip(betSlip);
 
             return RedirectToAction(nameof(Slip));
+        }
+
+        public async Task<IActionResult> History(int page = 1)
+        {
+            var historicalBetSlips = await this.userBets.UserHistory(User.Identity.Name, page, historyListPageSize);
+
+            var historicalBetSlipCount = await this.userBets.UserHistoryCount(User.Identity.Name);
+
+            var viewModel = new UserHistoryPageModel
+            {
+                BetSlips = historicalBetSlips,
+                CurrentPage = page,
+                TotalPages = (int)Math.Ceiling(historicalBetSlipCount / (double) historyListPageSize),
+                RequestPath = "users/history"
+            };
+
+            return View(viewModel);
         }
     }
 }

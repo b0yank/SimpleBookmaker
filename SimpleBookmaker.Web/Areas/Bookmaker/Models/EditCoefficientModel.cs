@@ -7,7 +7,7 @@
         public int CoefficientId { get; set; }
 
         public int SubjectId { get; set; }
-
+        
         [Range(0.01, double.MaxValue, ErrorMessage = "Coefficient must be larger than zero")]
         public double NewCoefficient { get; set; }
     }

@@ -1,10 +1,12 @@
 ﻿namespace SimpleBookmaker.Web.Areas.Admin.Controllers
 {
+    using Infrastructure;
     using Microsoft.AspNetCore.Mvc;
     using Models;
     using Models.Team;
     using Services.Contracts;
-    using SimpleBookmaker.Web.Infrastructure;
+    using Services.Models.Team;
+    using SimpleBookmaker.Web.Infrastructure.Filters;
     using System;
 
     public class TeamsController : AdminBaseController
@@ -21,6 +23,7 @@
         }
 
         [Route("{page?}/{keyword?}")]
+        [RestoreModelErrorsFromTempData]
         public IActionResult All(int page = 1, string keyword = null)
         {
             var teamsList = this.teams.All(page, allTeamsListPageSize, keyword);
@@ -123,6 +126,43 @@
             }
 
             return RedirectToAction(nameof(Edit), new { id = teamId });
+        }
+
+        public IActionResult Remove(int teamId)
+        {
+            if (!this.teams.Exists(teamId))
+            {
+                return NotFound(ErrorMessages.InvalidTeam);
+            }
+
+            var teamName = this.teams.GetName(teamId);
+
+            var viewModel = new BaseTeamModel
+            {
+                Id = teamId,
+                Name = teamName
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [SetTempDataModelErrors]
+        public IActionResult Destroy(int teamId)
+        {
+            if (!this.teams.Exists(teamId))
+            {
+                return NotFound(ErrorMessages.InvalidTeam);
+            }
+
+            var success = this.teams.Remove(teamId);
+
+            if (!success)
+            {
+                ModelState.AddModelError("", ErrorMessages.TeamRemoveFailed);
+            }
+
+            return RedirectToAction(nameof(All));
         }
     }
 }

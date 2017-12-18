@@ -10,6 +10,8 @@
     <a asp-action="Add" class="btn btn-success">Add New</a>
 </div>
 
+<div asp-validation-summary="All" class="alert-danger"></div>
+
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
@@ -25,7 +27,9 @@
         @foreach (var tournament in Model.Tournaments)
         {
             <tr>
-                <td>@tournament.Name</td>
+                <td>
+                    <a asp-action="Games" asp-route-tournamentId="@tournament.Id">@tournament.Name</a>
+                </td>
                 <td>@Html.DisplayFor(item => tournament.StartDate)</td>
                 <td>@Html.DisplayFor(item => tournament.EndDate)</td>
                 <td>@tournament.Teams</td>
