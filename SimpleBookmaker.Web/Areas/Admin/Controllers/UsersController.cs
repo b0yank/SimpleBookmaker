@@ -7,6 +7,7 @@
     using Services.Contracts;
     using Services.Infrastructure;
     using SimpleBookmaker.Web.Infrastructure;
+    using SimpleBookmaker.Web.Infrastructure.Filters;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -39,6 +40,7 @@
             return View(viewModel);
         }
         
+        [RestoreModelErrorsFromTempData]
         public async Task<IActionResult> ManageRoles(string id)
         {
             if (id == null)
@@ -52,14 +54,13 @@
             {
                 return BadRequest(ErrorMessages.InvalidUser);
             }
-
-            var userEmail = await this.userManager.GetEmailAsync(user);
+            
             var userRoles = await this.userManager.GetRolesAsync(user);
 
             var model = new UserManageRoleModel
             {
                 Id = id,
-                Email = userEmail,
+                Email = user.Email,
                 Roles = userRoles,
                 RolesNotAssigned = Roles.All().Where(r => !userRoles.Contains(r))
             };
@@ -68,21 +69,28 @@
         }
         
         [HttpPost]
+        [SetTempDataModelErrors]
         public async Task<IActionResult> AddRole(UserEditRoleModel model)
         {
             var user = await this.userManager.FindByIdAsync(model.Id);
+
+            if (user == null)
+            {
+                return BadRequest(ErrorMessages.InvalidUser);
+            }
 
             var result = await this.userManager.AddToRoleAsync(user, model.Role);
 
             if (!result.Succeeded)
             {
-                return BadRequest();
+                ModelState.AddModelError("AddFailed", ErrorMessages.UserAddRoleFailed);
             }
 
             return this.RedirectToAction(nameof(ManageRoles), new { id = model.Id });
         }
         
         [HttpPost]
+        [SetTempDataModelErrors]
         public async Task<IActionResult> RemoveRole(UserEditRoleModel model)
         {
             var user = await this.userManager.FindByIdAsync(model.Id);
@@ -96,7 +104,7 @@
 
             if (!result.Succeeded)
             {
-                return BadRequest(string.Format(ErrorMessages.InvalidRole, model.Role));
+                ModelState.AddModelError("AddFailed", string.Format(ErrorMessages.InvalidRole, model.Role));
             }
 
             return this.RedirectToAction(nameof(ManageRoles), new { id = model.Id });

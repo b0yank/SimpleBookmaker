@@ -55,7 +55,7 @@
                 .ProjectTo<TournamentDetailedListModel>();
         }
 
-        public bool Add(string name, DateTime startDate, DateTime endDate)
+        public virtual bool Add(string name, DateTime startDate, DateTime endDate)
         {
             if (this.db.Tournaments.Any(t => t.Name == name))
             {
@@ -96,7 +96,7 @@
         public bool Remove(int tournamentId)
             => RemoveTournament(tournamentId);
 
-        public bool Exists(int tournamentId)
+        public virtual bool Exists(int tournamentId)
             => this.TournamentExists(tournamentId);
        
         public TournamentModel ById(int tournamentId)
@@ -139,7 +139,7 @@
                 .ProjectTo<BaseTeamModel>();
 
 
-        public IEnumerable<BaseTeamModel> GetAvailableTeams(int tournamentId)
+        public virtual IEnumerable<BaseTeamModel> GetAvailableTeams(int tournamentId)
         {
             var availableTeamIds = this.db.Teams
                 .Where(t => !this.db.TournamentsTeams.Any(tt => tt.TeamId == t.Id && tt.TournamentId == tournamentId))
@@ -150,10 +150,10 @@
                 .ProjectTo<BaseTeamModel>();
         }
 
-        public bool AddTeam(int tournamentId, int teamId)
+        public virtual bool AddTeam(int tournamentId, int teamId)
             => this.AddTeams(tournamentId, new List<int>() { teamId });
 
-        public bool AddTeams(int tournamentId, IEnumerable<int> teamIds)
+        public virtual bool AddTeams(int tournamentId, IEnumerable<int> teamIds)
         {
             if (!this.TournamentExists(tournamentId))
             {
@@ -199,7 +199,7 @@
             return true;
         }
 
-        public bool RemoveTeam(int tournamentId, int teamId)
+        public virtual bool RemoveTeam(int tournamentId, int teamId)
         {
             if (!this.TournamentExists(tournamentId)
                 || !this.TeamExists(teamId))
@@ -240,7 +240,7 @@
                     .Where(t => !t.Teams.Any(team => team.TeamId == teamId))
                     .ProjectTo<TournamentListModel>();
 
-        public IEnumerable<GameListModel> Games(int tournamentId, bool upcoming = true, int page = 1, int pageSize = 20)
+        public virtual IEnumerable<GameListModel> Games(int tournamentId, bool upcoming = true, int page = 1, int pageSize = 20)
         {
             if (!this.TournamentExists(tournamentId))
             {
@@ -262,7 +262,7 @@
                 .ProjectTo<GameListModel>();
         }
 
-        public int GamesCount(int tournamentId)
+        public virtual int GamesCount(int tournamentId)
         {
             if (!this.TournamentExists(tournamentId))
             {

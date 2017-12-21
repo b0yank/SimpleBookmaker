@@ -13,7 +13,9 @@
     public class BaseController : Controller
     {
         protected SessionBetSlip GetBetSlip()
-            => HttpContext.Session.Get<SessionBetSlip>(GlobalConstants.SessionBetSlipKey);
+        {
+            return HttpContext.Session.Get<SessionBetSlip>(GlobalConstants.SessionBetSlipKey) ?? new SessionBetSlip();
+        }
 
         protected void SetBetSlip(SessionBetSlip betSlip)
             => HttpContext.Session.Set<SessionBetSlip>(GlobalConstants.SessionBetSlipKey, betSlip);

@@ -31,7 +31,7 @@
         public bool Exists(int playerId)
             => this.db.Players.Find(playerId) != null;
 
-        public bool Remove(int playerId)
+        public virtual bool Remove(int playerId)
         {
             var player = this.db.Players.Find(playerId);
 
@@ -66,7 +66,7 @@
             return true;
         }
 
-        public void Create(string name, int age, int teamId)
+        public virtual void Create(string name, int age, int teamId)
         {
             var player = new Player
             {
@@ -81,7 +81,7 @@
             this.db.SaveChanges();
         }
 
-        public bool AddToTeam(int playerId, int teamId)
+        public virtual bool AddToTeam(int playerId, int teamId)
         {
             var player = this.db.Players.Find(playerId);
             var team = this.db.Teams.Find(teamId);
@@ -89,6 +89,11 @@
             if (player == null || team == null)
             {
                 return false;
+            }
+
+            if (player.TeamId == teamId)
+            {
+                return true;
             }
 
             this.AddPlayerToTeamTournaments(player, teamId);
@@ -99,7 +104,7 @@
             return true;
         }
 
-        public bool RemoveFromTeam(int playerId)
+        public virtual bool RemoveFromTeam(int playerId)
         {
             var player = this.db.Players.Find(playerId);
 
@@ -136,6 +141,11 @@
 
             foreach (var tournamentId in tournamentIds)
             {
+                if (this.db.TournamentPlayers.Any(tp => tp.PlayerId == player.Id && tp.TournamentId == tournamentId))
+                {
+                    continue;
+                }
+
                 var tournamentPlayer = new TournamentPlayer
                 {
                     Player = player,

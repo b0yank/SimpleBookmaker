@@ -16,7 +16,7 @@
         {
         }
 
-        public bool Add(int tournamentId, int homeTeamId, int awayTeamId, DateTime time)
+        public virtual bool Add(int tournamentId, int homeTeamId, int awayTeamId, DateTime time)
         {
             var homeTeam = this.db.TournamentsTeams.FirstOrDefault(tt => tt.TournamentId == tournamentId && tt.TeamId == homeTeamId);
             var awayTeam = this.db.TournamentsTeams.FirstOrDefault(tt => tt.TournamentId == tournamentId && tt.TeamId == awayTeamId);
@@ -65,6 +65,16 @@
                 games = games.Where(g => g.TournamentId == tournamentId);
             }
 
+            if (page <= 0 || pageSize <= 0)
+            {
+                return new List<GameListModel>();
+            }
+
+            if (pageSize > 50)
+            {
+                pageSize = 50;
+            }
+
             return games
                 .Where(g => g.Time > DateTime.UtcNow)
                 .OrderBy(g => g.Time)
@@ -85,7 +95,7 @@
             return game.Time;
         }
 
-        public int UpcomingCount(int tournamentId)
+        public int UpcomingCount(int tournamentId = -1)
         {
             var games = this.db.Games.Where(g => g.Time > DateTime.UtcNow);
 
@@ -97,7 +107,7 @@
             return games.Count();
         }
 
-        public GameDetailedModel ById(int id)
+        public virtual GameDetailedModel ById(int id)
         {
             var game = this.db.Games.Where(g => g.Id == id);
 

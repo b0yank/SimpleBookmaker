@@ -31,7 +31,7 @@
         {
             if (!this.tournaments.Exists(tournamentId))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var viewModel = new GameAddModel
@@ -64,7 +64,7 @@
 
             if (!success)
             {
-                return NotFound(ErrorMessages.GameCreateFailed);
+                return BadRequest();
             }
 
             return RedirectToAction(nameof(TournamentsController.Games), "Tournaments", new { tournamentId = model.TournamentId });
@@ -76,7 +76,7 @@
 
             if (game == null)
             {
-                return NotFound(ErrorMessages.InvalidGame);
+                return BadRequest();
             }
 
             return View(game);
@@ -99,6 +99,11 @@
         public IActionResult Edit(int id)
         {
             var game = this.games.ById(id);
+
+            if (game == null)
+            {
+                return BadRequest();
+            }
 
             return View(game);
         }

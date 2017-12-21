@@ -46,7 +46,7 @@
         {
             if (!this.tournaments.Exists(id))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var tournamentCoefficients = this.tournamentBets.ExistingTournamentCoefficients(id);

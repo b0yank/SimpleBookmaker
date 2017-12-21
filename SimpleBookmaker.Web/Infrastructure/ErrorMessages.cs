@@ -23,5 +23,7 @@
         public const string InvalidBetType = "Invalid bet type";
         public const string InvalidCoefficientValue = "Coefficient must have a positive value";
         public const string CoefficientDeleteFailed = "Could not remove coefficient - perhaps there are unresolved bets on it?";
+        public const string TournamentAddFailed = "A tournament with the provided name already exists";
+        public const string UserAddRoleFailed = "Failed to add role to user";
     }
 }

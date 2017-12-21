@@ -25,7 +25,7 @@
         {
             if (!this.games.Exists(id))
             {
-                return NotFound(ErrorMessages.InvalidGame);
+                return BadRequest();
             }
 
             var gameCoefficients = this.userBets.GameCoefficients(id);

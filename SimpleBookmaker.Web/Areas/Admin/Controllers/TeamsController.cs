@@ -65,7 +65,7 @@
         {
             if (!this.teams.Exists(id))
             {
-                return NotFound(ErrorMessages.InvalidTeam);
+                return BadRequest();
             }
 
             var competingTournaments = this.tournaments.WithTeam(id);
@@ -89,11 +89,11 @@
         {
             if (!this.teams.Exists(teamId))
             {
-                return NotFound(ErrorMessages.InvalidTeam);
+                return BadRequest();
             }
             if (!this.tournaments.Exists(tournamentId))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var success = this.tournaments.AddTeam(tournamentId, teamId);
@@ -111,11 +111,11 @@
         {
             if (!this.teams.Exists(teamId))
             {
-                return NotFound(ErrorMessages.InvalidTeam);
+                return BadRequest();
             }
             if (!this.tournaments.Exists(tournamentId))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var success = this.tournaments.RemoveTeam(tournamentId, teamId);
@@ -132,7 +132,7 @@
         {
             if (!this.teams.Exists(teamId))
             {
-                return NotFound(ErrorMessages.InvalidTeam);
+                return BadRequest();
             }
 
             var teamName = this.teams.GetName(teamId);
@@ -152,7 +152,7 @@
         {
             if (!this.teams.Exists(teamId))
             {
-                return NotFound(ErrorMessages.InvalidTeam);
+                return BadRequest();
             }
 
             var success = this.teams.Remove(teamId);

@@ -6,6 +6,8 @@
 
 <h2>@ViewData["Title"]</h2>
 
+<div asp-validation-summary="All" class="alert-danger"></div>
+
 @if (Model.PastTournaments.Count() > 0)
 {
     <h4>Past Tournaments</h4>

@@ -38,7 +38,7 @@
             var coefficientHome = this.db.GameBetCoefficients
                 .Where(gbc => gbc.GameId == gameId && gbc.BetType == GameBetType.Outcome && gbc.Side == BetSide.Home)
                 .ProjectTo<UserGameCoefficientModel>()
-                .FirstOrDefault(); ;
+                .FirstOrDefault();
 
             var coefficientDraw = this.db.GameBetCoefficients
                 .Where(gbc => gbc.GameId == gameId && gbc.BetType == GameBetType.Outcome && gbc.Side == BetSide.Neutral)
@@ -48,7 +48,7 @@
             var coefficientAway = this.db.GameBetCoefficients
                 .Where(gbc => gbc.GameId == gameId && gbc.BetType == GameBetType.Outcome && gbc.Side == BetSide.Away)
                 .ProjectTo<UserGameCoefficientModel>()
-                .FirstOrDefault(); ;
+                .FirstOrDefault();
 
             if (coefficientHome == null
                 || coefficientDraw == null
@@ -96,8 +96,8 @@
             GameBetType betType,
             BetSide betSide,
             double coefficient,
-            int homeGoals = -1,
-            int awayGoals = -1)
+            int homeGoals = 0,
+            int awayGoals = 0)
         {
             if (!this.GameExists(gameId))
             {
@@ -145,6 +145,11 @@
 
         public IEnumerable<GamePossibleBetListModel> PossibleGameCoefficients(int gameId)
         {
+            if (!this.GameExists(gameId))
+            {
+                return null;
+            }
+
             var existingCoefficients = this.db.GameBetCoefficients
                 .Where(gbc => gbc.GameId == gameId)
                 .Select(gbc => new { Side = gbc.Side, BetType = gbc.BetType });
@@ -223,34 +228,6 @@
             });
         }
 
-        private IDictionary<GameBetType, ICollection<BetSide>> PossibleGameCoefficients()
-        {
-            var gameBetTypes = Enum.GetValues(typeof(GameBetType))
-                .Cast<GameBetType>();
-
-            var possibleBets = new Dictionary<GameBetType, ICollection<BetSide>>();
-
-            foreach (var gameBetType in gameBetTypes)
-            {
-                possibleBets[gameBetType] = new List<BetSide>();
-
-                if (gameBetType == GameBetType.Outcome 
-                || gameBetType == GameBetType.BothTeamsScore
-                || gameBetType == GameBetType.BothTeamsScore)
-                {
-                    possibleBets[gameBetType].Add(BetSide.Neutral);
-                }
-
-                if (gameBetType != GameBetType.BothTeamsScore)
-                {
-                    possibleBets[gameBetType].Add(BetSide.Home);
-                    possibleBets[gameBetType].Add(BetSide.Away);
-                }
-            }
-
-            return possibleBets;
-        }
-
         public void EditCoefficient(int coefficientId, double newCoefficient, BetType betType)
         {
             switch (betType)
@@ -321,6 +298,34 @@
             this.db.SaveChanges();
 
             return true;
+        }
+
+        private IDictionary<GameBetType, ICollection<BetSide>> PossibleGameCoefficients()
+        {
+            var gameBetTypes = Enum.GetValues(typeof(GameBetType))
+                .Cast<GameBetType>();
+
+            var possibleBets = new Dictionary<GameBetType, ICollection<BetSide>>();
+
+            foreach (var gameBetType in gameBetTypes)
+            {
+                possibleBets[gameBetType] = new List<BetSide>();
+
+                if (gameBetType == GameBetType.Outcome
+                || gameBetType == GameBetType.BothTeamsScore
+                || gameBetType == GameBetType.BothTeamsScore)
+                {
+                    possibleBets[gameBetType].Add(BetSide.Neutral);
+                }
+
+                if (gameBetType != GameBetType.BothTeamsScore)
+                {
+                    possibleBets[gameBetType].Add(BetSide.Home);
+                    possibleBets[gameBetType].Add(BetSide.Away);
+                }
+            }
+
+            return possibleBets;
         }
     }
 }

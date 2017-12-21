@@ -10,6 +10,8 @@
 
         GameStatsModel ById(int gameId);
 
+        bool Exists(int gameId);
+
         void ResolveBets(GameStats gameStats);
     }
 }

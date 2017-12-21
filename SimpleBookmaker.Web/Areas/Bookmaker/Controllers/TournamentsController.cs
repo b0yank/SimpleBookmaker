@@ -40,7 +40,7 @@
         {
             if (!this.tournaments.Exists(tournamentId))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var existingCoefficients = this.tournamentBets.ExistingTournamentCoefficients(tournamentId);
@@ -100,17 +100,17 @@
         {
             if (!this.teams.Exists(subjectId))
             {
-                return NotFound(ErrorMessages.InvalidTeam);
+                return BadRequest();
             }
 
             if (!this.tournaments.Exists(tournamentId))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             if (!Enum.IsDefined(typeof(TournamentBetType), betType))
             {
-                return NotFound(ErrorMessages.InvalidBetType);
+                return BadRequest();
             }
 
             if (coefficient <= 0)

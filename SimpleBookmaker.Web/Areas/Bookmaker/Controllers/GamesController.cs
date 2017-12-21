@@ -64,7 +64,7 @@
         {
             if (!this.games.Exists(gameId))
             {
-                return NotFound(ErrorMessages.InvalidGame);
+                return BadRequest();
             }
 
             if (!this.gameBets.HasBasicCoefficients(gameId))
@@ -111,7 +111,7 @@
         {
             if (!this.games.Exists(gameId))
             {
-                return NotFound(ErrorMessages.InvalidGame);
+                return BadRequest();
             }
 
             var existingCoefficients = this.gameBets.ExistingGamePlayerCoefficients(gameId);
@@ -141,12 +141,12 @@
         {
             if (!this.games.Exists(model.GameId))
             {
-                return NotFound(ErrorMessages.InvalidGame);
+                return BadRequest();
             }
 
             if (!this.players.Exists(model.PlayerId))
             {
-                return NotFound(ErrorMessages.InvalidPlayer);
+                return BadRequest();
             }
 
             var success = this.gameBets.AddPlayerGameCoefficient(model.PlayerId, 

@@ -3,6 +3,9 @@
     ViewData["Title"] = "Manage Roles";
 }
 <h2>@ViewData["Title"]</h2>
+
+<div asp-validation-summary="All" class="alert-danger"></div>
+
 <h4>Roles of @Model.Email</h4>
 <ul class="list-group">
     @foreach (var role in Model.Roles)

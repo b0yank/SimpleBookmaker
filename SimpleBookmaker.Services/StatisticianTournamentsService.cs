@@ -24,7 +24,7 @@
             this.tournamentBetResolverFactory = tournamentBetResolverFactory;
         }
 
-        public TournamentStatsSetModel ById(int tournamentId)
+        public virtual TournamentStatsSetModel ById(int tournamentId)
         {
             var tournament = this.db.Tournaments.Where(t => t.Id == tournamentId);
 
@@ -36,7 +36,7 @@
             return tournament.ProjectTo<TournamentStatsSetModel>().First();
         }
 
-        public bool Exists(int tournamentId)
+        public virtual bool Exists(int tournamentId)
             => this.TournamentExists(tournamentId);
 
         public IEnumerable<TournamentStatsListModel> Finished()
@@ -44,7 +44,7 @@
                     .Where(t => t.EndDate <= DateTime.UtcNow)
                     .ProjectTo<TournamentStatsListModel>();
 
-        public bool ResolveBets(int tournamentId, int championId)
+        public virtual bool ResolveBets(int tournamentId, int championId)
         {
             this.ResolveTournamentBets(tournamentId, championId);
 

@@ -4,7 +4,6 @@
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Player;
-    using Newtonsoft.Json;
     using Services.Contracts;
 
     public class PlayersController : AdminBaseController
@@ -27,7 +26,7 @@
 
             if (team == null)
             {
-                return NotFound($"Team with id {teamId} does not exist.");
+                return BadRequest();
             }
 
             var viewModel = new TeamPlayersListModel
@@ -46,7 +45,7 @@
 
             if (teamName == null)
             {
-                return NotFound(ErrorMessages.InvalidTeam);
+                return BadRequest();
             }
 
             TempData["TeamId"] = teamId;
@@ -103,7 +102,7 @@
 
             if (team == null)
             {
-                return NotFound(ErrorMessages.InvalidTeam);
+                return BadRequest();
             }
 
             var viewModel = new TeamPlayersListModel
@@ -123,7 +122,7 @@
 
             if (!success)
             {
-                return NotFound("Invalid player or team");
+                return BadRequest();
             }
 
             return RedirectToAction(nameof(All), new { teamId = model.TeamId });

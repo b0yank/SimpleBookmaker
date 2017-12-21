@@ -25,7 +25,7 @@
             this.userManager = userManager;
         }
         
-        public async Task<IEnumerable<UserCurrentBetSlipModel>> CurrentBets(string username)
+        public virtual async Task<IEnumerable<UserCurrentBetSlipModel>> CurrentBets(string username)
         {
             var userId = (await this.userManager.FindByNameAsync(username)).Id;
 
@@ -104,7 +104,7 @@
                 .ProjectTo<UserGameCoefficientModel>();
         }
 
-        public bool PlaceBets(IEnumerable<BetUnconfirmedModel> bets, double amount, string username)
+        public virtual bool PlaceBets(IEnumerable<BetUnconfirmedModel> bets, double amount, string username)
         {
             var user = this.db.Users.First(u => u.UserName == username);
 
@@ -242,7 +242,7 @@
             return false;
         }
 
-        public async Task<IEnumerable<UserHistoryBetSlipModel>> UserHistory(string username, int page = 1, int pageSize = 5)
+        public virtual async Task<IEnumerable<UserHistoryBetSlipModel>> UserHistory(string username, int page = 1, int pageSize = 5)
         {
             var userId = (await this.userManager.FindByNameAsync(username)).Id;
 
@@ -255,7 +255,7 @@
             return userBetSlipHistories;
         }
 
-        public async Task<int> UserHistoryCount(string username)
+        public virtual async Task<int> UserHistoryCount(string username)
         {
             var userId = (await this.userManager.FindByNameAsync(username)).Id;
 

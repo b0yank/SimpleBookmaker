@@ -28,7 +28,7 @@
             this.playerGameBetResolverFactory = playerGameBetResolverFactory;
         }
 
-        public bool Exists(int gameId)
+        public virtual bool Exists(int gameId)
             => this.GameExists(gameId);
 
         public IEnumerable<GameStatsListModel> Finished()
@@ -37,7 +37,7 @@
                 .ProjectTo<GameStatsListModel>()
                 .ToList();
 
-        public GameStatsModel ById(int gameId)
+        public virtual GameStatsModel ById(int gameId)
         {
             if (!GameExists(gameId))
             {

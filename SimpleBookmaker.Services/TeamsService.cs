@@ -16,7 +16,7 @@
         {
         }
 
-        public bool Add(string name)
+        public virtual bool Add(string name)
         {
             var team = new Team
             {
@@ -34,7 +34,7 @@
             return true;
         }
 
-        public bool Remove(int teamId)
+        public virtual bool Remove(int teamId)
         {
             var team = this.db.Teams.Find(teamId);
             var players = this.db.Players.Where(p => p.TeamId == teamId);
@@ -125,7 +125,7 @@
             return true;
         }
 
-        public bool Exists(int id)
+        public virtual bool Exists(int id)
             => this.TeamExists(id);
 
         public string GetName(int id)

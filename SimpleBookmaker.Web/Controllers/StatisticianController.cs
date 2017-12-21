@@ -30,6 +30,7 @@
             this.players = players;
         }
 
+        [RestoreModelErrorsFromTempData]
         public IActionResult Index()
         {
             var pastTournaments = this.tournaments.Finished();
@@ -47,6 +48,11 @@
         [RestoreModelErrorsFromTempData]
         public IActionResult SetStats(int gameId)
         {
+            if (!this.games.Exists(gameId))
+            {
+                return BadRequest();
+            }
+
             var game = this.games.ById(gameId);
 
             return View(game);
@@ -84,7 +90,7 @@
         {
             if (!this.tournaments.Exists(tournamentId))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var tournament = this.tournaments.ById(tournamentId);
@@ -97,19 +103,19 @@
         {
             if (!this.tournaments.Exists(model.TournamentId))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             if (!this.teams.Exists(model.ChampionId))
             {
-                return NotFound(ErrorMessages.InvalidTeam);
+                return BadRequest();
             }
 
             var success = this.tournaments.ResolveBets(model.TournamentId, model.ChampionId);
 
             if (!success)
             {
-                return BadRequest(ErrorMessages.TournamentRemoveFailed);
+                ModelState.AddModelError("", ErrorMessages.TournamentRemoveFailed);
             }
 
             return RedirectToAction(nameof(Index));

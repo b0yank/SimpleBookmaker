@@ -42,6 +42,7 @@
         public IActionResult Add() => View();
         
         [HttpPost]
+        [SetTempDataModelErrors]
         public IActionResult Add(TournamentAddModel model)
         {
             if (!ModelState.IsValid)
@@ -49,7 +50,12 @@
                 return View(model);
             }
 
-            this.tournaments.Add(model.Name, model.StartDate, model.EndDate);
+            var success = this.tournaments.Add(model.Name, model.StartDate, model.EndDate);
+
+            if (!success)
+            {
+                ModelState.AddModelError("", ErrorMessages.TournamentAddFailed);
+            }
 
             return this.RedirectToAction(nameof(All));
         }
@@ -60,7 +66,7 @@
 
             if (tournamentName == null)
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var availableTeams = this.tournaments.GetAvailableTeams(tournamentId);
@@ -79,7 +85,7 @@
         {
             if (!this.tournaments.Exists(tournamentId))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var tournament = this.tournaments.ById(tournamentId);
@@ -99,7 +105,7 @@
 
             if (!success)
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             return RedirectToAction(nameof(All));
@@ -109,7 +115,7 @@
         {
             if (!this.tournaments.Exists(tournamentId))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var tournament = this.tournaments.GetName(tournamentId);
@@ -129,7 +135,7 @@
         {
             if (!this.tournaments.Exists(model.Id))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var success = this.tournaments.Remove(model.Id);
@@ -147,14 +153,14 @@
         {
             if (!this.tournaments.Exists(model.TournamentId))
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             foreach (var teamId in model.Teams)
             {
                 if (this.tournaments.IsInTournament(model.TournamentId, teamId))
                 {
-                    return BadRequest(ErrorMessages.TeamAlreadyInTournament);
+                    return BadRequest();
                 }
             }
 
@@ -162,7 +168,7 @@
 
             if (!success)
             {
-                return NotFound(ErrorMessages.TeamTournamentAddFailed);
+                return BadRequest();
             }
 
             return RedirectToAction(nameof(All));
@@ -175,7 +181,7 @@
 
             if (tournament == null)
             {
-                return NotFound(ErrorMessages.InvalidTournament);
+                return BadRequest();
             }
 
             var tournamentGames = this.tournaments.Games(tournamentId, false, page, gamesListPageSize);
