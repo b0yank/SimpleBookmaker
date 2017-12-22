@@ -103,7 +103,7 @@
                 {
                     Amount = bs.Amount,
                     UserId = bs.UserId,
-                    Coefficients = bs.GameBets.Select(gb => gb.Coefficient).Union(bs.PlayerBets.Select(pb => pb.Coefficient))
+                    Coefficients = bs.GameBets.Select(gb => gb.Coefficient).Concat(bs.PlayerBets.Select(pb => pb.Coefficient))
                 });
 
             foreach (var betSlip in betSlips)

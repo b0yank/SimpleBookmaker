@@ -27,7 +27,7 @@
             <tr>
                 <td>@game.HomeTeam</td>
                 <td>@game.AwayTeam</td>
-                <td>@game.Kickoff</td>
+                <td>@($"{game.Kickoff.ToShortDateString()},   {game.Kickoff.ToString("HH:mm")}")</td>
                 <td>
                     <a asp-controller="Games" asp-action="Edit" asp-route-id="@game.Id" class="btn btn-warning">Edit</a>
                     <a asp-controller="Games" asp-action="Remove" asp-route-id="@game.Id"class="btn btn-danger">Remove</a>

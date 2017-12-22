@@ -10,7 +10,7 @@
     {
         TournamentModel ById(int tournamentId);
 
-        bool Add(string name, DateTime startDate, DateTime endDate);
+        bool Add(string name, DateTime startDate, DateTime endDate, int importance);
 
         bool Edit(int id, string name, DateTime startDate, DateTime endDate);
 

@@ -10,6 +10,15 @@
 
 <hr />
 
+@{
+    double totalCoefficient = 1;
+
+    foreach (var coefficient in Model.Bets.Select(b => b.Coefficient))
+    {
+        totalCoefficient *= coefficient;
+    }
+}
+
 @if (Model.Bets.Count() == 0)
 {
     <h4>Your bet slip is currently empty.</h4>
@@ -52,7 +61,7 @@ else
             <tr>
                 <td></td>
                 <td><input type="text" name="Amount" form="addBets" placeholder="Enter amount to bet" style="float:right" class="form-control"/></td>
-                <td><strong>@Model.Bets.Sum(b => b.Coefficient).ToString("F2")</strong></td>
+                <td><strong>@totalCoefficient.ToString("F2")</strong></td>
                 <td>
                     <form asp-action="PlaceBets" method="post" id="addBets">
 

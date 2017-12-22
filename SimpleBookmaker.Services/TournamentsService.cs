@@ -55,7 +55,7 @@
                 .ProjectTo<TournamentDetailedListModel>();
         }
 
-        public virtual bool Add(string name, DateTime startDate, DateTime endDate)
+        public virtual bool Add(string name, DateTime startDate, DateTime endDate, int importance)
         {
             if (this.db.Tournaments.Any(t => t.Name == name))
             {
@@ -66,7 +66,8 @@
             {
                 Name = name,
                 StartDate = startDate,
-                EndDate = endDate
+                EndDate = endDate,
+                Importance = importance
             };
 
             this.db.Tournaments.Add(tournament);
@@ -180,11 +181,16 @@
                     TournamentId = tournamentId
                 };
 
-                foreach (var player in team.Players)
+                foreach (var playerId in this.db.Players.Where(p => p.TeamId == teamId).Select(p => p.Id))
                 {
+                    if (this.db.TournamentPlayers.Any(tp => tp.PlayerId == playerId && tp.TournamentId == tournamentId))
+                    {
+                        continue;
+                    }
+
                     var tournamentPlayer = new TournamentPlayer
                     {
-                        PlayerId = player.Id,
+                        PlayerId = playerId,
                         TournamentId = tournamentId
                     };
 

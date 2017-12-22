@@ -49,12 +49,15 @@
             this.ResolveTournamentBets(tournamentId, championId);
 
             var resolvedBetSlips = this.db.TournamentBetSlips
-                .Where(tbs => tbs.Bets.All(b => b.IsEvaluated))
+                .Where(tbs => tbs.Bets.All(b => b.IsEvaluated) || tbs.Bets.Count == 0)
                 .ToList();
 
             this.AddBetSlipsToHistory(resolvedBetSlips);
 
             this.PayUsers();
+
+            this.db.TournamentBetSlips.RemoveRange(resolvedBetSlips);
+            this.db.SaveChanges();
 
             return RemoveTournament(tournamentId);
         }
@@ -98,7 +101,7 @@
                         IsSuccess = tb.IsSuccess,
                         EventName = tb.BetCoefficient.Tournament.Name,
                         TournamentEndDate = tb.BetCoefficient.Tournament.EndDate
-                    });
+                    }).ToList();
 
                 var bets = tournamentBets
                     .Select(tb => new BetHistoryModel

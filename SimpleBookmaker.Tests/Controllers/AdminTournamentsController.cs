@@ -46,10 +46,10 @@
             tournamentsServiceMock.Setup(ts => ts.RemoveTeam(It.Is<int>(id => id != invalidModelStateTestValue), It.Is<int>(id => id != invalidModelStateTestValue)))
                 .Returns(true);
 
-            tournamentsServiceMock.Setup(ts => ts.Add(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            tournamentsServiceMock.Setup(ts => ts.Add(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>()))
                 .Returns(true);
 
-            tournamentsServiceMock.Setup(ts => ts.Add(It.Is<string>(name => name == "fail"), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            tournamentsServiceMock.Setup(ts => ts.Add(It.Is<string>(name => name == "fail"), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>()))
                 .Returns(false);
 
             tournamentsServiceMock.Setup(ts => ts.AddTeams(It.IsAny<int>(), It.IsAny<IEnumerable<int>>()))

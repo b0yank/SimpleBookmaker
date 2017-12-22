@@ -16,7 +16,11 @@
         private bool? isTournamentType;
 
         public void Clear()
-            => this.bets = new List<BetUnconfirmedModel>();
+        {
+            this.isTournamentType = null;
+
+            this.bets = new List<BetUnconfirmedModel>();
+        }
 
         public IEnumerable<BetUnconfirmedModel> GetBets()
             => this.bets;

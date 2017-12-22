@@ -50,7 +50,7 @@
                 return View(model);
             }
 
-            var success = this.tournaments.Add(model.Name, model.StartDate, model.EndDate);
+            var success = this.tournaments.Add(model.Name, model.StartDate, model.EndDate, model.Importance);
 
             if (!success)
             {

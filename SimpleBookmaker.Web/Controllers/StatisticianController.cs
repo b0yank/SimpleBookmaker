@@ -10,6 +10,7 @@
     using Web.Infrastructure;
     using Web.Infrastructure.Filters;
     using System.Linq;
+    using System.Collections.Generic;
 
     [Authorize(Roles = Roles.Statistician)]
     public class StatisticianController : Controller
@@ -67,8 +68,13 @@
                 return RedirectToAction(nameof(SetStats), new { gameId = model.Id });
             }
 
-            var homeGoalcorers = model.HomeGoalscorers.Trim().Split(' ').Select(hg => int.Parse(hg));
-            var awayGoalcorers = model.AwayGoalscorers.Trim().Split(' ').Select(hg => int.Parse(hg));
+            var homeGoalcorers = model.HomeGoalscorers != null 
+                ? model.HomeGoalscorers.Trim().Split(' ').Select(hg => int.Parse(hg))
+                : new List<int>();
+
+            var awayGoalcorers = model.AwayGoalscorers != null
+                ? model.AwayGoalscorers.Trim().Split(' ').Select(hg => int.Parse(hg))
+                : new List<int>();
 
             var gameStats = new GameStats(
                 model.Id,

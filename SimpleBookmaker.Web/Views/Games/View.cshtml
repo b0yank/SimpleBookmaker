@@ -16,13 +16,15 @@
         .First(gc => gc.GameBetType == GameBetType.Outcome && gc.Side == BetSide.Away);
 
     var gameRestOfCoefficients = Model.GameCoefficients.Where(gc => gc.GameBetType != GameBetType.Outcome);
+
+    var eventName = $"{Model.HomeTeam} vs {Model.AwayTeam}";
 }
 
 <div class="ticketBox">
     <div class="ticket-description">
         <div class="row">
             <div class="col-xs-7">
-                <h2>@Model.HomeTeam vs @Model.AwayTeam</h2>
+                <h2>@eventName</h2>
             </div>
             <div class="col-xs-5">
                 <div class="col-xs-4">
@@ -72,6 +74,7 @@
                         <input type="hidden" name="BetType" value="@BetType.PlayerGame" />
                         <input type="hidden" name="Coefficient" value="@coefficient.Coefficient" />
                         <input type="hidden" name="BetCondition" value="@coefficient.BetCondition" />
+                        <input type="hidden" name="EventName" value="@eventName" />
 
                         <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
 

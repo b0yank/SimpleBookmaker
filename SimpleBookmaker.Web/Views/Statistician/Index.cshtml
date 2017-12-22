@@ -55,7 +55,7 @@
                 <tr>
                     <td>@game.HomeTeam</td>
                     <td>@game.AwayTeam</td>
-                    <td>@game.Kickoff.ToShortDateString() @game.Kickoff.Hour:@game.Kickoff.Minute</td>
+                    <td>@game.Kickoff.ToShortDateString() @game.Kickoff.ToString("HH:mm")</td>
                     <td>@game.Tournament</td>
                     <td>
                         <a asp-action="SetStats" asp-route-gameId="@game.Id" class="btn btn-primary">Set Stats</a>
